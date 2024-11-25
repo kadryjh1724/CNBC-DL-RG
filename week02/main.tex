@@ -1,0 +1,326 @@
+\documentclass[a4paper, 10pt]{article}
+\linespread{1.33}
+\input{../preamble.tex}
+\input{../usercommand.tex}
+
+\newcommand\lecturenumber{02}
+\newcommand\lecturedate{Oct 11, 2024}
+
+\pagestyle{fancyplain}
+\headheight 40pt
+\lhead{Lecture \lecturenumber\\CNBC Deep Learning Subgroup}
+\rhead{Riemannian Geometry for Deep Learning \\ Oct 18, 2024}
+\cfoot{Fall 2024, SNU}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section{Vectors and Vector Spaces}
+\setcounter{subsection}{2}
+
+\subsection{Rotations in 3D and SO(3) Groups}
+\setcounter{theorem}{18}
+
+\begin{example}
+    Consider a vector $v \in \mbb{R}^{3}$. Suppose that $v$ is rotated into $v' \in \mbb{R}^{3}$ via some rotation $R$.
+
+    This can be represented by \tit{matrix-vector multiplication}. In other words, $R$ can be represented as $3 \times 3$ matrix.
+    \[ \begin{bmatrix}(v')^{1} \\ (v')^{2} \\ (v')^{3}\end{bmatrix} = \begin{bmatrix}
+        R_{11} & R_{12} & R_{13} \\ R_{21} & R_{22} & R_{23} \\ R_{31} & R_{32} & R_{33}
+    \end{bmatrix}\begin{bmatrix}v^{1} \\ v^{2} \\ v^{3}\end{bmatrix} \]
+
+    Separating by each \tit{row} of the vector $v'$, we can express the equation above as
+    \[ (v')^{\mu} = R^{\mu}{}_{\nu} v^{\nu} \]
+    Note that we changed the location of index consistent to the vector components.
+
+    Such matrix $R$ is an element of $\mrm{SO(3)}$ group.
+    \begin{itemize}
+        \item[-] $\mrm{O(3)}$ group contains \tit{isometries}\footnote{Actually, $M \in \mrm{O(3)}$ means $M^{\msf{T}}M = MM^{\msf{T}} = \mbb{I}_{3}$. We will prove this soon.} in $\mbb{R}^{3}$.
+        \item[-] The $\mrm{SO(3)}$ group contains $\mrm{O}(3)$ rotations with $\det R = +1$.
+    \end{itemize}
+\end{example}
+
+\seprule
+
+\begin{example}
+    In \tbf{Example 1.6}, we mentioned that the basis is not unique. For example, the following two basis
+    \[ \{ e_{\mu} \} = \left\{ \begin{bmatrix}1\\ 0\\ 0\end{bmatrix}, \; \begin{bmatrix}0\\ 1\\ 0\end{bmatrix}, \begin{bmatrix}0\\ 0\\ 1\end{bmatrix} \right\}, \quad \{ e_{\nu}' \} = \left\{ \begin{bmatrix}1/\sqrt{2}\\ 1/\sqrt{2}\\ 0\end{bmatrix}, \; \begin{bmatrix}1/\sqrt{2}\\ -1/\sqrt{2}\\ 0\end{bmatrix}, \begin{bmatrix}0\\ 0\\ 1\end{bmatrix} \right\} \]
+    which span $\mbb{R}^{3}$. Note that these two basis set are \tbf{orthonormal}: $e_{\mu} \cdot e_{\nu} = \delta_{\mu\nu}$.
+    
+    The point is - even if we change the basis that describes $\mbb{R}^{3}$, the vector itself \tbf{does not change}. In other words, changing our point of view does not alter identity of the object.
+    \[ v = v^{j}e_{j} = (v')^{i}e_{i}' \]
+    From \tbf{Example 1.15} (rotation of components),
+    \begin{align*}
+        (v')^{i}e_{i}' &= (R^{i}{}_{j}v^{j})e_{i}' \\
+        &= v^{j}(R^{i}{}_{j}e_{i}') := v^{j}e_{j}
+    \end{align*}
+    we get transformation rule of basis, $e_{j} = R^{i}{}_{j}e_{i}'$.
+\end{example}
+
+\begin{remark}
+    This \tbf{passive transformation} point of view enables us to change the coordinate system without altering the nature of object itself.
+\end{remark}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{example}
+    In case of standard Euclidean basis(which is orthonormal), the following holds.
+    \[ e_{j} = R^{i}{}_{j}e_{i}', \; R^{\msf{T}}R = \mbb{I}_{3}, \; \det R = +1, \; e_{i} \cdot e_{j} = \delta_{ij} \]
+    Here, $R$ is a $3 \times 3$ representation of $\mrm{SO(3)}$ group. In case of \tbf{general linear coordinates}, some of the conditions are lifted.
+    \[ e_{j} = S^{i}{}_{j}e_{i}', \; S^{\msf{T}}S \neq \mbb{I}_{3}, \; \det S > 0, \; e_{i} \cdot e_{j} = g_{ij} \]
+    The basis is transformed by some $3 \times 3$ matrix $S$. But $S$ is not necessarily element of $\mrm{SO}(3)$. In general linear coordinates, orthonormality of basis is lifted up; off-diagonal terms may not vanish. We can gather all $e_{i} \cdot e_{j}$ to form a $3 \times 3$ matrix $g_{ij}$, the \tbf{metric}.
+\end{example}
+
+\seprule
+
+The metric defines how we should \tit{inner product} two vectors.
+\begin{example}
+    Assuming the standard basis in $\mbb{R}^{3}$, \tbf{interval} between two points $(x,y,z)$ and $(x+\d x,y+\d y,z+\d z)$ is defined by
+    \[ \d s^{2} = \d x^{2} + \d y^{2} + \d z^{2} = \begin{bmatrix}\d x & \d y & \d z\end{bmatrix}\begin{bmatrix}1 & & \\ & 1 & \\ & & 1\end{bmatrix}\begin{bmatrix}\d x \\ \d y \\ \d z\end{bmatrix} \]
+    The sandwiched matrix is actually: Kroenecker delta - metric of Euclidean space.
+    \[ \d s^{2} = \d x^{\mu}\delta_{\mu\nu}\d x^{\nu} = \delta_{\mu\nu}\d x^{\mu}\d x^{\nu} \]
+    In general linear coordinates, Kroenecker delta changes into metric tensor of that coordinate system.
+    \[ \boxed{\d s^{2} = \d x^{\mu} g_{\mu \nu} \d x^{\nu}} \]
+\end{example}
+
+\begin{obs}
+    Consider a Euclidean space with Euclidean metric $\delta_{\mu\nu}$. Rotating basis should yield the same interval $\d s^{2}$ indeed. Hence, $(\d s^{2})' = \d s^{2}$ gives
+    \begin{align*}
+        \delta_{\mu\nu} \d x'^{\mu} \d x'^{\nu} &= \delta_{\mu\nu} R^{\mu}{}_{\lambda} \d x^{\lambda} R^{\nu}{}_{\sigma} \d x^{\sigma} \\
+    &= (R^{\mu}{}_{\lambda}\delta_{\mu\nu}R^{\nu}{}_{\sigma})\d x^{\lambda} \d x^{\sigma} := \delta_{\lambda\sigma}\d x^{\lambda} \d x^{\sigma}
+    \end{align*}
+    In terms of matrices,
+    \[ R^{\msf{T}} \cdot \mbb{I}_{3} \cdot R = \mbb{I}_{3} \quad \Longrightarrow \quad R^{\msf{T}}R = \mbb{I}_{3} \]
+    Hence
+    \[ \mrm{O}(3) := \{ R \in \mrm{GL}(3, \mbb{R}) \,|\, R^{\msf{T}}R = \mbb{I}_{3} = RR^{\msf{T}} \} \]
+\end{obs}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{obs}
+    Consider the \tbf{Minkowski space-time}. Now space and time should be considered at once:
+    \[ \d\vec{x} = \begin{bmatrix}\d t & \d x & \d y & \d z\end{bmatrix}^{\msf{T}} \]
+    The spacetime is equipped with \tbf{Minkowski metric} $\eta$.
+    \[ \eta_{\mu\nu} = \mrm{diag}(-1,1,1,1) \]
+    Rotations in $\mbb{R}^{3}$ corresponds to \tbf{Lorentz transformations} in space-time: the transformation $L \in \mrm{GL}(4, \mbb{R})$ which connects different inertial frames!
+    \[ (x')^{\mu} = L^{\mu}{}_{\nu} x^{\nu} \]
+    Lorentz transformation conserves the \tbf{space-time interval}\footnote{This is derived from the assumption of special relativity.} $\d{s}^{2} = (\d{s}')^{2}$. This gives
+    \begin{align*}
+        \eta_{\mu\nu} \, \d{x}'^{\mu} \, \d{x}'^{\nu} &= \eta_{\mu\nu}L^{\mu}{}_{\lambda} \,\d{x}^{\lambda} L^{\nu}{}_{\sigma} \,\d{x}^{\sigma} \\
+        &= L^{\mu}{}_{\lambda}\eta_{\mu\nu}L^{\nu}{}_{\sigma} \cdot \d{x}^{\lambda} \,\d{x}^{\sigma} := \eta_{\lambda\sigma} \,\d{x}^{\lambda} \,\d{x}^{\sigma}
+    \end{align*}
+    which reduces into $L^{\msf{T}}\cdot\eta\cdot L = \eta$. Similar to $\mrm{SO(3)}$ group
+    \[ \mrm{SO}(3) = \{ R \in \mrm{GL}(3, \mbb{R}) \,|\, R^{\msf{T}}R = \mbb{I}_{3}, \; \det{R} = +1 \} \]
+    we can define the group of all Lorentz transformations.
+    \[ \mrm{SO(1,3)} = \{ R \in \mrm{GL}(4, \mbb{R}) \,|\, L^{\msf{T}}\eta L = \eta, \; \det{L} = +1, \; L^{0}{}_{0} > 0 \} \]
+    The last two conditions are required to define proper, orthochronous Lorentz transformations, but we will not go deeper here.
+\end{obs}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\section{Tensors and Tensor Products}
+
+\subsection{Tensors: Definition}
+
+\begin{definition}[(1,0)-tensors]
+    We (re)identify vectors as \tbf{(1,0)-tensors}.
+    \[ v = v^{\mu}e_{\mu} \in V \]
+\end{definition}
+\begin{definition}[(0,1)-tensors]
+    We (re)identify dual vectors as \tbf{(0,1)-tensors}.
+    \[ w = w_{\mu}e^{\mu} \in V^{\ast} \]
+    where dual basis $e^{\mu}$ is defined by $e^{\mu}(e_{\nu}) = \delta^{\mu}{}_{\nu}$.
+\end{definition}
+In other words, for $w \in V^{\ast}$ and $v \in V$, $w(v) \in \mbb{R}$.
+\begin{definition}[Natural pairing]
+    The \tbf{natural pairing} $\left< \bullet , \bullet \right> \,:\, V^{\ast} \times V \rightarrow \mbb{R}$ is defined by
+    \[ \left<w, v\right> = w(v) \in \mbb{R} \]
+    Note that this is not an inner product.
+\end{definition}
+
+\seprule
+
+\begin{definition}[Bilinear form]
+    Consider a \tbf{bilinear form} $T \,:\, V \times V \rightarrow \mbb{R}$. For $u, v \in V$, $T(u,v) \in \mbb{R}$ and
+    \begin{align*}
+        T(a_{1}u_{1} + a_{2}u_{2}, v) &= a_{1}T(u_{1},v) + a_{2}T(u_{2},v) \\
+        T(u, b_{1}v_{1} + b_{2}v_{2}) &= b_{1}T(u,v_{1}) + b_{2}T(u,v_{2})
+    \end{align*}
+    for $a_{1},a_{2},b_{1},b_{2}\in F$ and $u_{1},u_{2},u,v_{1},v_{2},v\in V$.
+\end{definition}
+\begin{definition}[(0,2)-tensor]
+    We (re)identify bilinear forms as \tbf{(0,2)-tensors}. Components of (0,2)-tensor $T$ is defined by
+    \[ T(u,v) = T(u^{i}e_{i},v^{j}e_{j}) = u^{i}v^{j}T(e_{i},e_{j}) := T_{ij}u^{i}v^{j} \]
+\end{definition}
+\begin{remark}
+    Where does (0,2)-tensor belong? Is it $(V^{\ast})^{2}$? No, it is not.
+\end{remark}
+\begin{definition}[Symmetric and antisymmetric tensors]
+    A (0,2)-tensor is \tbf{symmetric} if it does not change sign upon changing two inputs.
+    \[ T(u,v) = T(v,u) \quad (u,v \in V) \;\Longrightarrow\; T_{ij} = T_{ji} \quad (\text{in components}) \]
+    An \tbf{antisymmetric} tensor changes sign.
+    \[ T(u,v) = -T(v,u) \quad (u,v \in V) \;\Longrightarrow\; T_{ij} = -T_{ji} \quad (\text{in components}) \]
+\end{definition}
+\begin{remark}
+    This definition can be extended into higher-order tensors with multiple indices. In that case, the tensor is symmetric/antisymmetric with respect to certain indices.
+\end{remark}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\tbf{Inner product} is an operation such that takes two vectors to yield a scalar - it is a (0,2) tensor!
+
+\begin{definition}[Inner product]
+    Inner product is a (0,2)-tensor $g \,:\, V \times V \rightarrow \mbb{R}$ such that
+    \begin{itemize}
+        \item[(1)] $g_{\mu\nu} = g_{\nu\mu}$ ($g$ is a symmetric tensor)
+        \item[(2)] $\det g \neq 0$
+        \item[(3)] $g(v,v) \geq 0$ for all $v \in V$. Especially, $g(v,v) = 0 \;\Longleftrightarrow\; v = 0$.
+    \end{itemize}
+\end{definition}
+
+\seprule
+
+\begin{definition}[($q,r$)-tensors]
+    A $(q,r)$-tensor $T^{(q,r)} \,:\, (V^{\ast})^{q} \times V^{r} \rightarrow \mbb{R}$ has $q$ vector-like parts and $r$ covector-like parts. Note that covectors get vectors as inputs\footnote{Even if vectors do not take covectors as \tit{inputs}, we may rely on duality for our better understanding.}. Since vector components have superscript indices and dual vector components have subscript indices, the component of $(q,r)$-tensor is
+    \[ T^{i_{1}\cdots i_{q}}{}_{j_{1}\cdots j_{r}} = T(e^{i_{1}}, \cdots, e^{i_{q}}, e_{j_{1}}, \cdots, e_{j_{r}}) \]
+\end{definition}
+
+Here, we are hiding how can we construct such $(q,r)$-tensors. We relyed on several linear algebra analogies until now. Before we proceed, let's remark one thing:
+
+\begin{remark}
+    We can view the bilinear form (or a (0,2)-tensor) $T\,:\, V\times V \rightarrow \mbb{R}$ in another perspective. If we feed one input in advance, $T(\bullet, v) \;(v\in V)$ acts like a covector(it takes one vector to yield a scalar).
+    \[ T(\bullet, v) \,:\, V \rightarrow \mbb{R} \quad\Longrightarrow\quad T\,:\, V \rightarrow V^{\ast} \;??? \]
+    It seems that one vector space $V$ has moved right hand side of the arrow, by adding the asterisk! This kind of \tbf{partial insertion view} is quite useful understanding higher order tensors. In components,
+    \[ T_{ij}v^{j} := w_{i} \]
+    Pre-substituting one vector(note the superscript index) gives $w_{i}$: the subscript on the component indicates that $w$ is a covector.
+\end{remark}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\subsection{Tensor Products}
+\begin{example}
+    Suppose that we have two (0,1)-tensors $v = v_{\mu}e^{\mu}$ and $w = w_{\nu}e^{\nu}$. How can we construct a (0,2)-tensor from $v$ and $w$? The answer is \tbf{tensor product}(denoted by $\otimes$). The new (0,2)-tensor $v \otimes w$ is defined by
+    \[ (v \otimes w)(e_{i}, e_{j}) := v_{i} w_{j} \]
+    Although we do not proof this claim, \tit{given the basis} $\{ e^{\mu} \}$\tit{, }$\{ e^{\mu} \otimes e^{\nu} \}$\tit{ forms basis of any (0,2)-tensor.}
+    \[ T = T_{\mu\nu} e^{\mu} \otimes e^{\nu} \]
+    Now, we denote the space of all (0,2)-tensors as $\boxed{V^{\ast} \otimes V^{\ast}}$.
+\end{example}
+\begin{definition}[Tensor Product Space]
+    The space of all $(q,r)$-tensors is denoted by
+    \[ \bigotimes_{q}V \otimes \bigotimes_{r} V^{\ast} \]
+    It has $q$ components that transform like vectors, and $r$ components that transform like covectors. Note that
+    \[ T^{(q,r)} \,:\, \bigotimes_{q} V^{\ast} \otimes \bigotimes_{r} V \rightarrow \mbb{R} \]
+    \tit{Vectors take covectors as inputs\footnote{Do not take this message too seriously!} and covectors take vectors as inputs}.
+\end{definition}
+
+Now we know how higher-order tensors are constructed. Let's downgrade them now.
+\begin{definition}[Contraction]
+    Given $(q,r)$-tensor $T^{(q,r)}$, \tbf{contraction} decreases vector and covector indices by 1 (yielding $(q-1,r-1)$-tensor). Practically,
+    \[ T = (\cdots,\, e^{\mu},\, \cdots,\, e_{\mu},\, \cdots) \]
+    putting same index for some vector and covector part and summing - is a contraction.
+\end{definition}
+\begin{example}
+    Contraction utilizes the natural pairing between dual basis and original vector space basis.
+    \begin{itemize}
+        \item[(1)] Consider a (1,1)-tensor $T$. Since it has one vector-like component and one covector-like component, it should be represented by
+        \[ T^{\mu}{}_{\nu}(e_{\mu}\otimes e^{\nu}) \in V \otimes V^{\ast} \]
+        From the definition of dual basis $e^{\nu}(e_{\mu}) = \left<e^{\nu},e_{\mu}\right> = \delta^{\nu}{}_{\mu}$, contraction gives
+        \[ T^{\mu}{}_{\nu}\delta^{\nu}{}_{\mu} = T^{\mu}{}_{\mu} \in \mbb{R} \]
+        Note that (1) contracting a (1,1)-tensor yielded (0,0)-tensor(a scalar) and (2) contraction is similar to \tbf{taking a trace} through certain selected axis.
+        \item[(2)] Consider a (1,2)-tensor $T^{a}{}_{bc}(e_{a}\otimes e^{b}\otimes e^{c}) \in V \otimes V^{\ast} \otimes V^{\ast}$. Then we have two possible options for contraction:
+        \begin{align*}
+            \left<e^{b},e_{a}\right> = \delta^{b}{}_{a} \;&\Longrightarrow\; T^{a}{}_{bc}\delta^{b}{}_{a} = T^{a}{}_{ac} \in V^{\ast} \\
+            \left<e^{c},e_{a}\right> = \delta^{c}{}_{a} \;&\Longrightarrow\; T^{a}{}_{bc}\delta^{c}{}_{a} = T^{a}{}_{ba} \in V^{\ast}
+        \end{align*}
+    \end{itemize}
+\end{example}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+What does the location of indices mean?
+\begin{itemize}
+    \item[-] If the component index is \tbf{superscript}, it means that it transforms like vector components.
+    \item[-] If the component index is \tbf{subscript}, it means that it transforms like covector components.
+\end{itemize}
+
+\begin{definition}[Raising \& lowering indices]
+    Consider $u = u^{\mu}e_{\mu} \in V$. The \tbf{metric tensor}
+    \[ g = g_{\mu\nu}e^{\mu} \otimes e^{\nu} \in V^{\ast} \otimes V^{\ast} \]
+    is used for raising and lowering of indices. Tensor product with metric tensor followed by contraction yields
+    \[ (u^{\mu}e_{\mu}) \otimes (g_{\nu\lambda}e^{\nu}\otimes e^{\lambda}) \;\Longrightarrow\; (u^{\mu}g_{\nu\lambda}\delta^{\nu}{}_{\mu})e^{\lambda} = \underbrace{(u^{\mu}g_{\mu\lambda})}_{:= u_{\lambda}}e^{\lambda} \]
+    since $\left<e^{\nu},e_{\mu}\right> = \delta^{\nu}{}_{\mu}$. The same procedure gives raising of indices.
+    \[ u_{\mu} = g_{\mu\nu}u^{\nu}, \; u^{\mu} = g^{\mu \nu} u_{\nu} \]
+\end{definition}
+\begin{definition}[Inverse of metric tensors]
+    We know metric tensor as (0,2)-tensor, which has two covector-like components $g_{\mu\nu}$. Then what is $g^{\mu\nu}$? $g^{\mu\nu}$ is a \tbf{name} given to inverse of $g_{\mu\nu}$.
+    \begin{align*}
+        g_{\mu\nu}g^{\nu\lambda} &= g_{\mu}^{\lambda} \quad (\text{in index raising perspective, shorthand notation}) \\
+        &= \delta_{\mu}{}^{\lambda} \quad (\text{since }gg^{-1} = \mbb{I})
+    \end{align*}
+    The \tit{awkward} index positions(considering the original shape of a tensor) are result of \tit{shorthand} notations. For example, a (2,0)-tensor $T^{\mu\nu}$,
+    \[ T^{\mu}{}_{\lambda} = T^{\mu\nu}g_{\nu\lambda} \]
+    the LHS is a shorthand for the RHS.
+\end{definition}
+\begin{obs}
+    Someone may wonder \tbf{the reason we use metric for raising and lowering the indices}. The short answer is - metric encodes the geometry of spaces. It tells us how the space is curved. But if it does not satisfy your eager, there exists an alternative explanation. With the partial insertion view, define a new dual vector
+    \[ \tau(x) := (x, \bullet) \in V^{\ast} \]
+    where $(\bullet,\bullet)$ denotes the usual inner product. Here, $g_{\mu\nu} = (e_{\mu},e_{\nu})$. Then,
+    \[ g^{\mu\lambda}\tau(e_{\lambda})(e_{\nu}) = g^{\mu\lambda}(e_{\lambda},e_{\nu}) = g^{\mu\lambda}g_{\lambda\nu} = \delta^{\mu}{}_{\nu} \]
+    Recall the definition of dual basis: $e^{\mu}(e_{\nu}) = \delta^{\mu}{}_{\nu}$. Hence, $g^{\mu\lambda}\tau(e_{\lambda})$ is the dual basis $e^{\mu}$! In other words, metric maps $e_{\lambda}$ to a dual basis $e^{\mu}$. For the general vector $X = X^{\mu}e_{\mu} \in V$,
+    \begin{align*}
+        \tau(X) &= (X, \bullet) = X^{\mu}(e_{\mu},\bullet) \\
+        &= X^{\mu}\tau(e_{\mu}) = X^{\mu}\delta_{\mu}{}^{\nu}\tau(e_{\nu}) \\
+        &= X^{\mu}g_{\mu\lambda}\underbrace{(g^{\lambda\nu}\tau(e_{\nu}))}_{=e^{\lambda}} \\
+        &:= X_{\lambda}e^{\lambda}
+    \end{align*}
+    We can observe $X^{\mu}g_{\mu\lambda}$ corresponds to $X_{\lambda}$, considering the previous analogies.
+\end{obs}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{exer}
+    Consider the \tbf{energy-momentum tensor of electromagnetic field}
+    \[ T^{ab} = F^{ac}F^{b}{}_{c} - \frac{1}{4}\eta^{ab}F^{cd}F_{cd} \]
+    where $\eta = \mrm{diag}(-1,1,1,1)$ is the Minkowski metric. Note that space-time has dimension 4.
+    \begin{itemize}
+        \item[(a)] The \tbf{electromagnetic tensor} $F_{ab}$ is defined as
+        \[ F_{ab} = \partial_{a}A_{b} - \partial_{b}A_{a} \]
+        where $\displaystyle{\partial_{a} := \frac{\partial}{\partial x^{a}}}$ and $A_{\mu} = (-\phi,\vec{A})$. Show that $F_{ab}$ is an antisymmetric tensor\footnote{Therefore, all diagonal part is zero.}.
+        \item[(b)] Using the fact that $F_{i0} = E_{i}\;(i=1,2,3)$ and $F_{ij} = \epsilon_{ijk}B^{k}\;(i,j=1,2,3)$, show that
+        \[ T^{0j} = (\mbf{E}\times\mbf{B})^{j}\;(j=1,2,3) \]
+        \item[(c)] Show that $T^{ab} = T^{ba}$($T$ is symmetric).
+        \item[(d)] Show that $T^{a}{}_{a} = 0$($T$ is traceless).
+    \end{itemize}
+\end{exer}
+\begin{proof}
+    Note that $\partial_{a}$, partial differentiation with respect to $x^{a}$, behaves like covector.
+    \begin{itemize}
+        \item[(a)] Trivial.
+        \item[(b)] Since $\eta^{0j} = 0\;(j=1,2,3)$,
+        \[ T^{0j} = F^{0i}F^{j}{}_{i} = -F^{i0}F^{j}{}_{i} \]
+        Here,
+        \begin{align*}
+            F^{i0} &= F_{ab}\eta^{ia}\eta^{0b} = F_{ab}\eta^{ia}(-\delta^{0b})=-F_{a0}\eta^{ia}=-E_{a}\eta^{ia}=-E^{i} \\
+            F^{j}{}_{i} &= F_{bi}\eta^{bj} = \epsilon_{bik}B^{k}\eta^{bj}
+        \end{align*}
+        Combining these two yields
+        \[ T^{0j} = E^{i}\epsilon_{bik}B^{k}\eta^{bj} = (\mbf{E}\times\mbf{B})_{b}\eta^{bj} = (\mbf{E}\times\mbf{B})^{j} \]
+        \item[(c)] Note that $\eta^{ab}=\eta^{ba}$.
+        \begin{align*}
+            T^{ba} &= F^{bc}F^{a}{}_{c} - \frac{1}{4}\eta^{ba}F^{cd}F_{cd} \\
+            &= F^{bc}F^{ad}\eta_{dc} - \frac{1}{4}\eta^{ab}F^{cd}F_{cd} = F^{ad}F^{b}{}_{d} - \frac{1}{4}\eta^{ba}F^{cd}F_{cd} = T^{ab}
+        \end{align*}
+        \item[(d)] Note that $\eta^{ab}\eta_{ab} = \mrm{tr}(\mrm{diag}(-1,1,1,1)\cdot\mrm{diag}(-1,1,1,1)) = 4$.
+        \[ T^{a}{}_{a} = T^{ab}\eta_{ab} = F^{ac}F^{b}{}_{c}\eta_{ab} - \frac{1}{4}\eta^{ab}\eta_{ab}F^{cd}F_{cd} = F^{ac}F_{ac}-\frac{1}{4}\cdot 4\cdot F^{cd}F_{cd} = 0 \]
+    \end{itemize}
+\end{proof}
+
+\end{document}
