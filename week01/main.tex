@@ -1,0 +1,294 @@
+\documentclass[a4paper, 10pt]{article}
+\linespread{1.33}
+\input{../preamble.tex}
+\input{../usercommand.tex}
+
+\newcommand\lecturenumber{01}
+\newcommand\lecturedate{Oct 11, 2024}
+
+\pagestyle{fancyplain}
+\headheight 40pt
+\lhead{Lecture \lecturenumber\\CNBC Deep Learning Subgroup}
+\rhead{Riemannian Geometry for Deep Learning \\ Oct 11, 2024}
+\cfoot{Fall 2024, SNU}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section{Vectors and Vector Spaces}
+
+\subsection{Vector Space: Definitions}
+
+\begin{definition}[Vector spaces]
+    Let $F$ be a field (such as $\mbb{R}$, $\mbb{C}$, etc.). Suppose that there is a set $V$ equipped with addition $+ \,:\, V \times V \rightarrow V$ and scalar multiplication $\cdot \,:\, F \times V \rightarrow V$. If $V$ satisfies the following 8 properties (for $a, b \in F$ and $u, v, w \in V$),
+    \begin{itemize}
+        \item[(1)] $(u + v) + w = u + (v + w)$
+        \item[(2)] $v + w = w + v$
+        \item[(3)] $\exists \, 0 \in V$ such that $v + 0 = 0 + v = v$
+        \item[(4)] For given $v \in V$, $\exists \, -v \in V$ such that $v + (-v) = 0$
+        \item[(5)] $(a + b)v = av + bv$
+        \item[(6)] $a(v + w) = av + aw$
+        \item[(7)] $a(bv) = (ab)v$
+        \item[(8)] $1 \cdot v = v$
+    \end{itemize}
+    then $V$ is a \tbf{vector space} over $F$. Elements of $F$ and $V$ are called \tbf{scalars} and \tbf{vectors}, respectively.
+\end{definition}
+
+Sets such as $F^{n}$ (or something like $\mbb{R}^{n}$) are familiar example of vector spaces.
+
+\seprule
+
+\begin{exer}
+    Prove the following.
+    \begin{itemize}
+        \item[(1)] The \tbf{identity element} $0 \in V$ exists uniquely.
+        \item[(2)] For $v \in V$, \tbf{inverse element} $-v \in V$ exists uniquely.
+    \end{itemize}
+\end{exer}
+\begin{proof}
+    \begin{itemize}
+        \item[(1)] Let $0'$ be another identity element. Then
+        \begin{align*}
+            0 &= 0 + 0' \quad (0' \, \text{is an identity}) \\
+            &= 0' \quad (0 \, \text{is an identity})
+        \end{align*}
+        \item[(2)] Let $w$ be another inverse element ($v + w = 0$). Then
+        \[ -v = -v + 0 = -v + (v + w) = (-v + v) + w = 0 + w = w \]
+    \end{itemize}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{exer}
+    Prove the following. $(v \in V, a \in F)$
+    \begin{itemize}
+        \item[(1)] $0v = 0$
+        \item[(2)] $a0 = 0$
+        \item[(3)] $-v = (-1)v$
+        \item[(4)] If $v \neq 0$ and $a \neq 0$, then $av \neq 0$.
+    \end{itemize}
+\end{exer}
+\begin{proof}
+    \begin{itemize}
+        \item[(1)] $0v = (0 + 0)v = 0v + 0v \;\Longrightarrow\; 0v = 0$
+        \item[(2)] $a0 = a(0 + 0) = a0 + a0 \;\Longrightarrow\; a0 = 0$
+        \item[(3)] $v + (-1)v = 1v + (-1)v = (1 - 1)v = 0v = 0 \;\Longrightarrow\; -v = (-1)v$
+        \item[(4)] Suppose that $av = 0$. Then
+        \[ v = 1v = \left(\frac{1}{a} \cdot a\right)v = \frac{1}{a}(av) = \frac{1}{a}0 = 0 \quad \contradiction \]
+    \end{itemize}
+\end{proof}
+\begin{definition}[Subspaces]
+    Let $W$ be a subset of $F$-vector space $V$. If $W$ becomes a $F$-vector space for the addition and scalar multiplication operations inherited from $V$, $W$ is a \tbf{subspace} of $V$. We denote this by $W \leq V$.
+\end{definition}
+\begin{obs}
+    For $\varnothing \neq W \subseteq V$, $W \leq V$ if and only if
+    \begin{itemize}
+        \item[(1)] $w_{1}, w_{2} \in W \;\Longrightarrow\; w_{1} + w_{2} \in W$
+        \item[(2)] $a \in F, \, w \in W \;\Longrightarrow\; aw \in W$
+    \end{itemize}
+\end{obs}
+The proof is almost trivial (you may check it by yourself). In short, $W$ becomes a subspace of $V$ if it is closed for the addition and scalar multiplication.
+
+\seprule
+
+Lastly, we introduce an extremely important concept.
+\begin{definition}[Isomorphisms]
+    Let $V$ and $V'$ be $F$-vector spaces. If there exists a bijection $\varphi \,:\, V \rightarrow V'$ such that
+    \[ \varphi(v + w) = \varphi(v) + \varphi(w), \quad \varphi(av) = a\varphi(v) \quad (a \in F, \; v, w \in V) \]
+    then $V$ and $V'$ are \tbf{isomorphic} ($V \simeq V')$. The bijection $\varphi$ is called an \tbf{isomorphism}.
+\end{definition}
+\begin{remark}
+    Isomorphism $\varphi$ preserves the addition and scalar multiplication, as you can see in its definition. Moreover, if there is an isomorphism between two vector spaces, those two spaces are \tbf{identical} \tit{de facto}.
+\end{remark}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{definition}{Basis of a vector space}
+    A non-empty subset of $V$, $\mathfrak{B} \subseteq V$ is called a \tbf{basis} of $V$ if it satisfies the following properties.
+    \begin{itemize}
+        \item[(1)] $\left< \mathfrak{B} \right> = V$, where $\left< \mathfrak{B} \right>$ denotes the set of all linear combinations of vectors in $\mathfrak{B}$.
+        In other words, $\mathfrak{B}$ generates (or \tbf{spans}) $V$.
+        \item[(2)] $\mathfrak{B}$ is linearly independent.
+    \end{itemize}
+\end{definition}
+\begin{remark}
+    When we say a set of vectors $v_{1}, \, \cdots, \, v_{n}$ are \tit{linearly independent}, this implies
+    \[ \text{If} \, a_{1}v_{1} + a_{2}v_{2} + \cdots + a_{n}v_{n} = 0, \, \text{then all} \, a_{i} = 0 \; (i = 1, \, 2, \, \cdots, \, n) \]
+\end{remark}
+\begin{example}
+    Consider $F = \mbb{R}$ and $V = \mbb{R}^{3}$. Then we have \tbf{standard (Euclidean) basis}
+    \[ e_{1} = \begin{bmatrix}1\\ 0\\ 0\end{bmatrix}, \; e_{2} = \begin{bmatrix}0\\ 1\\ 0\end{bmatrix}, \; e_{3} = \begin{bmatrix}0\\ 0\\ 1\end{bmatrix} \]
+    The basis is not unique; actually, there exists multiple different basis that spans $\mbb{R}^{3}$.
+\end{example}
+
+We often denote a vector in $\mbb{R}^{3}$ as $v = [5, 2, 3]^{\msf{T}}$. In fact, this means
+\[ v = 5\begin{bmatrix}1\\ 0\\ 0\end{bmatrix} + 2\begin{bmatrix}0\\ 1\\ 0\end{bmatrix} + 3\begin{bmatrix}0\\ 0\\ 1\end{bmatrix} = 5e_{1} + 2e_{2} + 3e_{3} \]
+where 5, 2 and 3 indicates the \tbf{components} of $v$.
+\begin{definition}[Components of vectors]
+    Let $\mathfrak{B} = \{ e_{1}, \,\cdots\, e_{n}\}$ be a $F$-basis of $V$. Then any vector $v \in V$ can be represented by the linear combination of $\{ e_{\mu} \}_{\mu = 1}^{n}$ (by definition).
+    \[ v = v^{1}e_{1} + v^{2}e_{2} + \cdots + v^{n}e_{n} = \sum_{\mu = 1}^{n} v^{\mu} e_{\mu} \]
+    We call these $v^{\mu}$'s as \tbf{components}.
+\end{definition}
+\begin{remark}
+    Note that basis of a vector space, $e_{\mu}$, has lower index, while component of a vector $v^{\mu}$ has upper index.
+\end{remark}
+\begin{remark}
+    In differential geometry, we often encounter summations on overlapping indices. 
+    
+    \tbf{Einstein notation} simplies this by (simply) omitting summation signs.
+    \[ \sum_{\mu = 1}^{n} v^{\mu} e_{\mu} := v^{\mu} e_{\mu} \]
+    If we encounter overlapping indices - one in superscript and one in subscript, we assume there is an omitted summation.
+\end{remark}
+\begin{definition}[Dimension]
+    $\dim V = |\mathfrak{B}|$.
+\end{definition}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\subsection{Linear Maps and Dual Vector Spaces}
+\begin{definition}[Linear map]
+    Let $V$ and $W$ be $F$-vector spaces. If a map $L \,:\, V \rightarrow W$ satisfies
+    \[ L(v+w) = L(v) + L(w), \quad L(av) = a\cdot L(v) \quad (a \in F, \, v, w \in V) \]
+    we call $L$ a \tbf{linear map}.
+\end{definition}
+\begin{exer}
+    Let $L$ be a linear map and $u, v \in V$. Prove the followings.
+    \begin{itemize}
+        \item[(1)] $L(0) = 0$
+        \item[(2)] $L(-v) = -L(v)$
+        \item[(3)] $L(u-v) = L(u) - L(v)$
+    \end{itemize}
+\end{exer}
+\begin{proof}
+    \begin{itemize}
+        \item[(1)] $L(0) = L(0+0) = L(0) + L(0) \;\Longrightarrow\; L(0) = 0$
+        \item[(2)] $L(0) = L(v-v) = L(v) + L(-v) \;\Longrightarrow\; -L(v) = L(-v)$
+        \item[(3)] $L(u-v) = L(u) + L(-v) = L(u) - L(v)$
+    \end{itemize}
+\end{proof}
+While talking about maps, we should mention these two.
+\begin{definition}[Kernel and image]
+    Let $L \,:\, V \rightarrow W$ be a linear map.
+    \begin{itemize}
+        \item[(1)] The \tbf{kernel} of $L$ is defined by $\ker L = L^{-1}(0) = \{ v \in V \,|\, L(v) = 0 \}$.
+        \item[(2)] The \tbf{image} of $L$ is defined by $\im L = L(V) = \{ L(V) \in W \,|\, v \in V \}$.
+    \end{itemize}
+\end{definition}
+\begin{exer}
+    Show that (1) $\ker L \leq V$ and (2) $\im L \leq W$.
+\end{exer}
+\begin{proof}
+    By \tbf{Observation 1.3}, it suffices to show that $\ker L$ and $\im L$ are closed.
+    \begin{itemize}
+        \item[(1)] Let $v, w \in \ker L$. Then
+        \[ L(v + w) = L(v) + L(w) = 0 + 0 = 0, \quad L(av) = aL(v) = 0 \; (a \in F) \]
+        Hence, $v + w, av \in \ker L \;\Longrightarrow\; \ker L \leq V$.
+        \item[(2)] Let $L(v), L(w) \in \im L$. Then
+        \[ L(v) + L(w) = L(\underbrace{v+w}_{\in V}) \in \im L, \quad aL(v) = L(\underbrace{av}_{\in V}) \in \im L \; (a \in F) \]
+        gives $\im L \leq W$.
+    \end{itemize}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{theorem}[Dimension theorem]
+    Let $V$ be a finite dimensional vector space and $L$ be a linear map $L \,:\, V \rightarrow W$. Then
+    \[ \dim V = \dim \ker L + \dim \im L \]
+\end{theorem}
+\begin{proof}
+    Let basis of $\ker L$ be $\{ e_{1} ,\, \cdots ,\, e_{r} \}$ (in other words, $\dim \ker L := r$).
+
+    Since $\ker L \leq V$, we can \tit{extend} the basis of $\ker L$ to the basis of $V$\footnote{$\because$ Basis extension theorem, which we neither mentioned nor proved.} as following.
+    \[ \mathfrak{B} = \{ e_{1} ,\, \cdots ,\, e_{r}, \textcolor{blue}{e_{r+1} ,\, \cdots ,\, e_{n}} \} \]
+    Here, note that $L(e_{1}) = \cdots = L(e_{r})$ (they are elements of $\ker L$).
+
+    \tbf{WTS}: $\{ L(e_{r+1}) ,\, \cdots ,\, L(e_{n}) \}$ is a basis of $\im L$.
+    \begin{itemize}
+        \item[(1)] $\{ L(e_{r+1}) ,\, \cdots ,\, L(e_{n}) \}$ are linearly independent. In the following equation, we expect all $a^{k} \; (k = r+1, \cdots, n)$ should be zero.
+        \[ \sum_{k = r+1}^{n} a^{k} L(e_{k}) = 0 = L \left(\sum_{k = r+1}^{n} a^{k}e_{k}\right) \]
+        The last equal sign holds since $L$ is a linear map. Since substituting $a^{k}e_{k}$\footnote{This is written in Einstein notation.} into $L$ yields zero, $a^{k}e_{k} \in \ker L$. Hence, $a^{k}e_{k}$ can be represented by the linear combination of $\{ e_{1} ,\, \cdots ,\, e_{r} \}$.
+        \[ \sum_{k=r+1}^{n}a^{k}e_{k} = \sum_{k=1}^{r}b^{k}e_{k} \]
+        This equation can be arranged into a single summation.
+        \[ \sum_{k=1}^{n}c^{k}e_{k} = 0 \]
+        where $c^{k} = b^{k}$ for $k = 1, \cdots, r$ and $c^{k} = -a^{k}$ for $k = r+1, \cdots, n$. Since $\{e_{k}\}_{k=1}^{n}$ is a basis of $V$, these vectors are linearly independent - hence, all $c^{k}$ are zero. Therefore, all $a^{k} \; (k = r+1, \cdots, n)$ becomes zero automatically.
+        \item[(2)] $\left< L(e_{r+1}) ,\, \cdots ,\, L(e_{n}) \right> = \im L$. 
+        
+        This is straightforward; for arbitrary $L(v) \in \im L$,
+        \begin{align*}
+            L(v) &= L \left(\sum_{k=1}^{n} v^{k}e_{k}\right) \\
+            &= L \left(\sum_{k=1}^{r} v^{k}e_{k} + \sum_{k=r+1}^{n} v^{k}e_{k}\right) \\
+            &= \cancel{L \left(\sum_{k=1}^{r} v^{k}e_{k}\right)} + L \left(\sum_{k=r+1}^{n} v^{k}e_{k}\right) \quad (\because \sum_{k=1}^{r} v^{k}e_{k} \in \ker L) \\
+            &= \sum_{k=r+1}^{n} v^{k} L(e_{k})
+        \end{align*}
+    \end{itemize}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{definition}[Vector space of linear maps]
+    Let $\mathfrak{L}(V,W)$ be the set of all linear maps from $V$ to $W$.
+    \[ \mathfrak{L}(V,W) = \{ L \,:\, V \rightarrow W \,|\, L \, \text{is linear} \} \]
+    By defining addition and scalar multiplication of linear maps as following,
+    \begin{align*}
+        \text{addition} \,&: \quad (L+M)(v) := L(v) + M(v) \\
+        \text{scalar multiplication} \,&: \quad (aL)(v) := aL(v)
+    \end{align*}
+    $(L, M \in \mathfrak{L}(V, W),\; v \in V,\; a \in F)$ $\mathfrak{L}(V,W)$ becomes a \tbf{vector space} of linear maps.
+\end{definition}
+
+\seprule
+
+\begin{definition}[Dual vector space]
+    Especially,
+    \[ \mathfrak{L}(V, F) := V^{\ast} \]
+    is called a \tbf{dual vector space}. The element of $V^{\ast}$, $w \in V^{\ast}$ is called a \tbf{dual vector} (or a \tbf{covector}).
+\end{definition}
+\begin{remark}
+    An element of a dual vector space is actually a \tit{linear map}. In other words, for $w \in V^{\ast}$ and $v \in V$,
+    \[ w \,:\, V \rightarrow F \quad \text{and} \quad w(v) \in F \]
+\end{remark}
+Now we prove an important theorem that helps us grasp concepts of dual basis and components of dual vectors.
+\begin{theorem}
+    $\dim V^{\ast} = \dim V$.
+\end{theorem}
+\begin{proof}
+    Let $\mathfrak{B} = \{e_{1} ,\, \cdots ,\, e_{n} \} = \{ e_{\mu} \}$ be a basis of $V$ ($\dim V := n$).
+
+    Define some linear maps (or dual vectors) $e^{\mu} \,:\, V \rightarrow F$ as
+    \[ e^{\mu}(e_{\nu}) = \delta^{\mu}{}_{\nu} \]
+    where $\delta^{\mu}{}_{\nu}$ is the usual Kroenecker delta\footnote{You may wonder why one index is superscripted while the other is subscripted. This will be clarified in the next week's lecture.}.
+
+    \tbf{WTS}: $\mathfrak{B}^{\ast} = \{ e^{\mu} \}$ is a basis of $V^{\ast}$\footnote{Proving this statement gives our original claim immediately.}.
+    \begin{itemize}
+        \item[(1)] $\mathfrak{B}^{\ast}$ is linearly independent: let's start from $a_{\mu}e^{\mu} = 0$. Then
+        \[ (v \in V) \quad a_{\mu} e^{\mu}(v) = 0 \]
+        However, since $e^{\mu}$ is a linear map, it suffices to check their behavior at the basis of $V$, $e_{nu}$\footnote{This has deeper context in standard linear algebra course, and can be shown. However, we skip the detail.}. Hence
+        \[ a_{\mu} e^{\mu}(e_{\nu}) = a_{\textcolor{red}{\mu}}\delta^{\textcolor{red}{\mu}}{}_{\nu} = a_{\nu} = 0 \]
+        \item[(2)] $\left<\mathfrak{B}^{\ast}\right> = V^{\ast}$? For arbitrary $w \in V^{\ast}$, it can be expanded into
+        \[ w = w(e_{1})e^{1} + w(e_{2})e^{2} + \cdots + w(e_{n})e^{n} := w_{\mu}e^{\mu} \]
+    \end{itemize}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
+\begin{remark}
+    In the last line of proof, we defined the \tbf{component} of a dual vector, $w(e_{\mu}) = w_{\mu}$. Both the basis and component of dual vectors are closely related to the basis $e_{\mu}$ of original vector space $V$.
+\end{remark}
+
+In summary,
+\begin{itemize}
+    \item[-] Let $V$ be a $F$-vector space, and $v \in V$ be a vector. Then $v$ can be expanded into the linear combination of basis vectors.
+    \[ \boxed{v = v^{\mu} e_{\mu}} \]
+    \item[-] The concept of dual space naturally follows from the original vector space $V$. The dual vector space $V^{\ast} = \mathfrak{L}(V,W)$ has dual vectors (or covectors) as elements: $w \in V^{\ast}$ and $w \,:\, V \rightarrow F$. The dual vector can be expanded into dual basis.
+    \[ \boxed{w = w_{\mu} e^{\mu}} \]
+    where $w_{\mu} := w(e_{\mu})$.
+\end{itemize}
+
+\end{document}
