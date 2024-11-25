@@ -1,0 +1,92 @@
+% ┌─────────────────────┐
+% │     preamble.tex    │
+% └─────────────────────┘
+
+% ══════════ [1] Basic document settings ══════════
+\usepackage{fullpage}
+\usepackage{geometry}
+\geometry{
+    top = 2cm,
+    bottom = 4.5cm,
+    left = 2.5cm,
+    right = 2.5cm
+}
+\usepackage{lastpage}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\usepackage{enumerate}
+\usepackage{sectsty}
+\subsectionfont{\color{blue}}
+\usepackage{enumitem}
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{fourier-orns}
+\usetikzlibrary{decorations.text}
+\pgfplotsset{compat = newest}
+\newcommand{\seprule}{
+    \vspace*{1.5em}
+    \vspace{-8pt}\hrulefill
+    \raisebox{-2.1pt}{\quad\decofourleft\decotwo\decofourright\quad}\hrulefill
+    \vspace*{1.5em}
+}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1},
+  urlcolor=blue
+}
+
+\usepackage{fancyhdr}
+\usepackage[]{mdframed}
+
+\renewcommand{\thesubsection}{\S{} \arabic{section}.\arabic{subsection}}
+
+% ══════════ [2] Math packages ══════════
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+
+% ══════════ [3] Miscellaneous & Fonts ══════════
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\usepackage{mathpazo}
+\usepackage{domitian}
+\usepackage[T1]{fontenc}
+\let\oldstylenums\oldstyle
+\setmonofont[Scale = 0.8]{DejaVu Sans Mono}
+
+% ══════════ [4] amsthm setup ══════════
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\theoremstyle{definition}
+\newtheorem{obs}[theorem]{Observation}
+
+\theoremstyle{definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newmdtheoremenv[innertopmargin = 8pt,
+                 innerbottommargin = 10pt]{exer}[theorem]{Exercise}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
