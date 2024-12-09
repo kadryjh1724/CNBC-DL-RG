@@ -1,0 +1,164 @@
+\documentclass[a4paper, 10pt]{article}
+\linespread{1.33}
+\input{../preamble.tex}
+\input{../usercommand.tex}
+
+\newcommand\lecturenumber{10}
+\newcommand\lecturedate{Dec 13, 2024}
+
+\pagestyle{fancyplain}
+\headheight 40pt
+\lhead{Lecture \lecturenumber\\CNBC Deep Learning Subgroup}
+\rhead{Riemannian Geometry for Deep Learning \\\lecturedate}
+\cfoot{Fall 2024, SNU}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+\setcounter{section}{6}
+\section{Differential Forms}
+
+\setcounter{subsection}{1}
+\subsection{Exterior Derivatives}
+
+\setcounter{theorem}{13}
+
+\begin{definition}[Exterior derivative]
+    The \tbf{exterior derivative} is a map $\d_{r} \,:\, \Omega^{r}(\mca{M}) \rightarrow \Omega^{r+1}(\mca{M})$ such that
+    \begin{align*}
+        \omega = & \frac{1}{r!}\omega_{\mu_{1}\cdots\mu_{r}}\,\,d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}} \\
+        &\quad \mapsto \quad \d_{r}\omega \equiv \frac{1}{r!} \left(\frac{\partial}{\partial{x}^{\nu}}\right) \, \d{x}^{\nu} \wedge \d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}}
+    \end{align*}
+    We usually drop the subscript $r$ if there is no need of specification.
+\end{definition}
+
+\begin{remark}
+    The exterior derivative maps $r$-forms to $r+1$-forms. By definition $\d_{r}\omega$ is properly and automatically antisymmetrized.
+\end{remark}
+
+\begin{example}
+    There are the following $r$-forms in a three-dimensional space.
+    \begin{itemize}
+        \item[(i)] $\omega_{0} = f(x, y, z) \in \Omega^{0}(\mca{M})$
+        \item[(ii)] $\omega_{1} = w_{x}(x,y,z)\,\d{x} + \omega_{y}(x,y,z)\,\d{y} + \omega_{z}(x,y,z)\,\d{z} \in \Omega^{1}(\mca{M})$
+        \item[(iii)] $\omega_{2} = \omega_{xy}(x,y,z)\,\d{x}\wedge\d{y} + \omega_{yz}(x,y,z)\,\d{y}\wedge\d{z} + \omega_{zx}(x,y,z)\,\d{z}\wedge\d{x} \in \Omega^{2}(\mca{M})$
+        \item[(iv)] $\omega_{3} = \omega_{xyz}(x,y,z)\,\d{x}\wedge\d{y}\wedge\d{z} \in \Omega^{3}(\mca{M})$
+    \end{itemize}
+    \tbf{Digression.} Do you remember the \tit{axial vectors} (or often called as \tit{pseudovectors})\footnote{In contrast to \tit{polar} vectors (or normal vectors).}?
+    \[ \alpha^{\mu} = \eps^{\mu\nu\lambda}\omega_{\nu\lambda} \]
+    As you can see, a \tit{two-form} may be regarded as a \tit{vector}. The \tbf{Levi-Civita symbol} provides the isomorphism between $\mathscr{X}(\mca{M})$ and $\Omega^{2}(\mca{M})$.
+
+    The action of exterior derivative gives
+    \begin{itemize}
+        \item[(i')] $\d\omega_{0}$ gives \tbf{gradient}.
+        \[ \d\omega_{0} = \frac{\partial{f}}{\partial{x}}\,\d{x} + \frac{\partial{f}}{\partial{y}}\,\d{y} + \frac{\partial{f}}{\partial{z}}\,\d{z} \]
+        \item[(ii')] $\d\omega_{1}$ gives \tbf{curl}.
+        \[ \d\omega_{1} = \left(\frac{\partial\omega_{y}}{\partial{x}} - \frac{\partial\omega_{x}}{\partial{y}}\right)\,\d{x}\wedge\d{y} + \left(\frac{\partial\omega_{z}}{\partial{y}} - \frac{\partial\omega_{y}}{\partial{z}}\right)\,\d{y}\wedge\d{z} + \left(\frac{\partial\omega_{x}}{\partial{z}} - \frac{\partial\omega_{z}}{\partial{x}}\right)\,\d{z}\wedge\d{x} \]
+        \item[(iii')] $\d\omega_{2}$ gives \tbf{divergence}.
+        \[ \d\omega_{2} = \left(\frac{\partial\omega_{yz}}{\partial{x}} + \frac{\partial\omega_{zx}}{\partial{y}} + \frac{\partial\omega_{xy}}{\partial{z}}\right)\,\d{x}\wedge\d{y}\wedge\d{z} \]
+        \item[(iv')] $\d\omega_{3}$ vanishes: $\d\omega_{3} = 0$.
+    \end{itemize}
+\end{example}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Let $\xi \in \Omega^{q}(\mca{M})$ and $\omega \in \Omega^{r}(\mca{M})$. Show that
+    \[ \d(\xi \wedge \omega) = \d\xi \wedge \omega + (-1)^{q} \xi \wedge \d\omega \]
+\end{exer}
+
+\begin{proof}
+    Since
+    \[ \xi \wedge \omega = \frac{1}{q!r!}\sum_{P \in S_{q+r}}\xi_{\mu_{P(1)}\cdots\mu_{P(q)}}\omega_{\mu_{P(q+1)}\cdots\mu_{P(q+r)}} \, \d{x}^{\mu_{P(1)}} \wedge \cdots \wedge \d{x}^{\mu_{P(q)}} \wedge \d{x}^{\mu_{P(q+1)}} \wedge \cdots \d{x}^{\mu_{P(q+r)}} \]
+    Applying the exterior derivative gives
+    \[ \d(\xi \wedge \omega) = \frac{1}{q!r!(q+r)!}\sum_{P \in S(q+r)} \underbrace{\frac{\partial(\xi_{\mu_{P(1)}\cdots\mu_{P(q)}}\omega_{\mu_{P(q+1)}\cdots\mu_{P(q+r)}})}{\partial{x}^{\nu}} \, \d{x}^{\nu} \wedge \d{x}^{\mu_{P(1)}} \wedge \cdots \d{x}^{\mu_{P(q+r)}}}_{(\ast)} \]
+    Consider the terms inside the summation. It can be decomposed into
+    \begin{align*}
+        (\ast) &= \left[ \frac{\partial\xi_{\mu_{P(1)}\cdots\mu_{P(q)}}}{\partial{x}^{\nu}} \, \d{x}^{\nu} \wedge \d{x}^{\mu_{P(1)}} \wedge \cdots \wedge \d{x}^{\mu_{P(q)}} \right] \wedge \left[ \omega_{\mu_{P(q+1)}\cdots\mu_{P(q+r)}} \, \d{x}^{\mu_{P(q+1)}} \wedge \cdots \d{x}^{\mu_{P(q+r)}} \right] \\
+        &\qquad + (-1)^{q} \left[ \xi_{\mu_{P(1)}\cdots\mu_{P(q)}} \, \d{x}^{\mu_{P(1)}} \wedge \cdots \wedge \d{x}^{\mu_{P(q)}} \right] \wedge \left[ \frac{\partial\omega_{\mu_{P(q+1)}\cdots\mu_{P(q+r)}}}{\partial{x}^{\nu}} \, \d{x}^{\nu} \wedge \d{x}^{\mu_{P(q+1)}} \wedge \cdots \d{x}^{\mu_{P(q+r)}} \right]
+    \end{align*}
+    Let's take a look at the first term of $(\ast)$. Since
+    \[ \d\xi = \frac{1}{q!}\partial_{\nu}\xi_{\mu_{1}\cdots\mu_{q}}\,\d{x}^{\nu}\wedge\d{x}^{\mu_{1}}\wedge\cdots\wedge\d{x}^{\mu_{q}} \;\text{and}\; \omega = \frac{1}{r!}\omega_{\mu_{q+1}\cdots\mu_{q+r}}\,\d{x}^{\mu_{q+1}}\wedge\cdots\wedge\d{x}^{\mu_{q+r}} \]
+    The wedge product between $\d\xi$ and $\omega$ gives
+    \begin{align*}
+        \d\xi\wedge\omega &= \frac{1}{q!r!(q+r+1)!} \sum_{P' \in S_{q+r+1}} \partial_{P'(\nu)}\xi_{\mu_{P'(1)}\cdots\mu_{P'(q)}}\omega_{\mu_{P'(q+1)}\cdots\mu_{P'(q+r)}}\,\d{x}^{P'(\nu)}\wedge\cdots\wedge\d{x}^{\mu_{P'(q+r)}} \\
+        &= (q+r+1) \cdot \frac{1}{q!r!(q+r+1)!} \sum_{P \in S_{q+r}} \left[ \frac{\partial\xi_{\mu_{P(1)}\cdots\mu_{P(q)}}}{\partial{x}^{\nu}} \, \d{x}^{\nu} \wedge \d{x}^{\mu_{P(1)}} \wedge \cdots \wedge \d{x}^{\mu_{P(q)}} \right] \\
+        & \qquad\qquad\qquad\qquad\qquad\qquad\wedge \left[ \omega_{\mu_{P(q+1)}\cdots\mu_{P(q+r)}} \, \d{x}^{\mu_{P(q+1)}} \wedge \cdots \d{x}^{\mu_{P(q+r)}} \right]
+    \end{align*}
+    the first term in $(\ast)$. For the second term, the same logic can be applied. Note that the term $(q+r+1)$ arises by excluding $\nu$ from the permutation in $S_{q+r+1}$.
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{obs}
+    Let $\displaystyle{X = X^{\mu}\frac{\partial}{\partial{x}^{\mu}}}$ and $\displaystyle{Y = Y^{\mu}\frac{\partial}{\partial{x}^{\mu}}}$ be vector fields and $\omega = \omega_{\mu}\,\d{x}^{\mu} \in \Omega^{1}(\mca{M})$. Then
+    \begin{align*}
+        X[\omega(Y)] - Y[\omega&(X)] - \omega([X, Y]) \\
+        &= X^{\mu}\partial_{\mu}\left<\omega_{\nu}\,\d{x}^{\nu}, Y^{\lambda}\partial_{\lambda}\right> - Y^{\mu}\partial_{\mu}\left<\omega_{\nu}\,\d{x}^{\nu}, X^{\lambda}\partial_{\lambda}\right> - \left<\omega_{\mu}\,\d{x}^{\mu}, X^{\nu}\partial_{\nu}Y^{\lambda}\partial\lambda - Y^{\nu}\partial_{\nu}X^{\lambda}\partial_{\lambda}\right> \\
+        &= X^{\mu}\partial_{\mu}(\omega_{\nu}Y^{\nu}) - Y^{\mu}\partial_{\mu}(\omega_{\nu}X^{\nu}) - \omega_{\mu}X^{\nu}\partial_{\nu}Y^{\mu} + \omega_{\mu}Y^{\nu}\partial_{\nu}X^{\mu} \\
+        &= X^{\mu}Y^{\nu}\partial_{\mu}\omega_{\nu} - X^{\nu}Y^{\mu}\partial_{\mu}\omega_{\nu} \\
+        &= \frac{\partial\omega_{\nu}}{\partial{x}^{\mu}}(X^{\mu}Y^{\nu}-X^{\nu}Y^{\mu}) = \d\omega(X,Y)
+    \end{align*}
+    Note that $\d\omega \in \Omega^{2}(\mca{M})$.
+\end{obs}
+
+\begin{remark}
+    For an $r$-form $\omega \in \Omega^{r}(\mca{M})$,
+    \begin{align*}
+        \d\omega(X_{1},\cdots,X_{r+1}) = \sum_{i=1}^{r+1}(-1)^{i+1}&X_{i}\omega(X_{1},\cdots,\hat{X_{i}},\cdots,X_{r+1}) \\
+        &+ \sum_{i < j}(-1)^{i+j}\omega([X_{i},X_{j}], X_{1}, \cdots, \hat{X_{i}}, \cdots, \hat{X_{j}}, \cdots, X_{r+1})
+    \end{align*}
+    \textcolor{red}{\tbf{The proof is left for the reader.}}
+\end{remark}
+
+\begin{obs}
+    $\d^{2} = 0$. More explicitly, $\d_{r+1}\d_{r} = 0$. Take $\displaystyle{\omega = \frac{1}{r!}\omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\mu_{1}}\wedge\cdots\wedge\d{x}^{\mu_{r}} \in \Omega^{r}(\mca{M})}$. The action of $\d^{2}$ gives
+    \[ \d^{2}\omega = \frac{1}{r!}\underbrace{\frac{\partial^{2}\omega_{\mu_{1}\cdots\mu_{r}}}{\partial{x}^{\nu}\partial{x}^{\lambda}}}_{\text{sym. under} \nu\leftrightarrow\lambda}\,\underbrace{\d{x}^{\nu}\wedge\d{x}^{\lambda}}_{\text{antisym. under} \nu\leftrightarrow\lambda}\wedge\d{x}^{\mu_{1}}\wedge\cdots\wedge\d{x}^{\mu_{r}} = 0 \]
+\end{obs}
+
+\begin{definition}
+    The \tbf{pullback} of an $r$-form is defined by
+    \[ f^{\ast} \,:\, \Omega^{r}_{f(p)}(\mca{N}) \rightarrow \Omega^{r}_{p}(\mca{M}), \; (f^{\ast}\omega)(X_{1},\cdots,X_{r}) = \omega(f_{\ast}X_{1},\cdots,f_{\ast}X_{r}) \]
+    where $f \,:\, \mca{M} \rightarrow \mca{N}$, $\omega \in \Omega^{r}(\mca{N})$ and $X_{i} \in T_{p}\mca{M}$.
+\end{definition}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Let $\xi, \omega \in \Omega^{r}(\mca{N})$ and $f\,:\,\mca{M}\rightarrow\mca{N}$. Show that
+    \begin{itemize}
+        \item[(1)] $\d(f^{\ast}\omega) = f^{\ast}(\d\omega)$
+        \item[(2)] $f^{\ast}(\xi\wedge\omega) = (f^{\ast}\xi)\wedge(f^{\ast}\omega)$
+    \end{itemize}
+\end{exer}
+
+\begin{proof}
+    \hphantom{.}
+    \begin{itemize}
+        \item[(i)] $\d(f^{\ast}\omega)(X_{1},\cdots,X_{r}) = \d\omega(f_{\ast}X_{1},\cdots,f_{\ast}X_{r}) = f^{\ast}\d\omega(X_{1},\cdots,X_{r})$
+        \item[(ii)] Use the definition of wedge product:
+        \begin{align*}
+            f^{\ast}(\xi\wedge\omega)(X_{1},\cdots,X_{2r}) &= (\xi\wedge\omega)(f_{\ast}X_{1},\cdots,f_{\ast}X_{2r}) \\
+            &= \frac{1}{(r!)^{2}}\sum_{P \in S_{2r}}\mrm{sgn}(P)\xi(f_{\ast}X_{P(1)},\cdots,f_{\ast}X_{P(r)})\omega(f_{\ast}X_{P(r+1)},\cdots,f_{\ast}X_{P(2r)}) \\
+            &= \frac{1}{(r!)^{2}}\sum_{P \in S_{2r}}\mrm{sgn}(P)f^{\ast}\xi(X_{P(1)},\cdots,X_{P(r)})f^{\ast}\omega(X_{P(r+1)},\cdots,X_{P(2r)}) \\
+            &= (f^{\ast}\xi)\wedge(f^{\ast}\omega)(X_{1},\cdots,X_{2r})
+        \end{align*}
+    \end{itemize}
+\end{proof}
+
+\begin{definition}[De Rham Complex and de Rham cohomology] The exterior derivative $\d_{r}$ induces the sequence (\tbf{de Rham complex})
+\[ 0 \xrightarrow{i} \Omega^{0}(\mca{M}) \xrightarrow{\d_{0}} \Omega^{1}(\mca{M}) \xrightarrow{\d_{1}} \cdots \xrightarrow{\d_{m-2}} \Omega^{m-1}(\mca{M}) \xrightarrow{\d_{m-1}} \Omega^{m}(\mca{M}) \xrightarrow{\d_{m}} 0 \]
+\begin{itemize}
+    \item[-] $\d^{2} = 0$ implies $\im\d_{r} \subset \ker\d_{r+1}$.
+    \[ \omega \in \Omega^{r}(\mca{M}) \;\Longrightarrow\; \d_{r}\omega \in \im\d_{r}, \quad \d_{r+1}(\d_{r}\omega) = 0 \;\Longrightarrow\; \d_{r}\omega \in \ker\d_{r+1} \]
+    \item[-] An element of $\ker\d_{r}$ and $\im\d_{r-1}$ are called \tbf{closed $r$-form} and \tbf{exact $r$-form}, respectively.
+    \item[-] Namely, $\omega \in \Omega^{r}(\mca{M})$ is \tit{closed} if $\d_{r}\omega = 0$ and \tit{exact} if there exists an $(r-1)$-form $\psi$ such that $\omega = \d\psi$.
+    \item[-] The quotient space $\ker\d_{r}/\im\d_{r-1}$ is called the $r$-th \tbf{de Rham cohomology group}.
+\end{itemize}
+    We won't go further on this.
+\end{definition}
+
+\end{document}
