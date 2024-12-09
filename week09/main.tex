@@ -1,0 +1,221 @@
+\documentclass[a4paper, 10pt]{article}
+\linespread{1.33}
+\input{../preamble.tex}
+\input{../usercommand.tex}
+
+\newcommand\lecturenumber{09}
+\newcommand\lecturedate{Dec 6, 2024}
+
+\pagestyle{fancyplain}
+\headheight 40pt
+\lhead{Lecture \lecturenumber\\CNBC Deep Learning Subgroup}
+\rhead{Riemannian Geometry for Deep Learning \\\lecturedate}
+\cfoot{Fall 2024, SNU}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+\setcounter{section}{6}
+\section{Differential Forms}
+
+\subsection{Differential Forms: Basic Definitions}
+
+\begin{definition}[Permutation]
+    Let $\omega \in \mathfrak{T}^{(0,r)}_{p}(\mca{M})$. For a permutation $P \in S_{r}$\footnote{Here, $S_{r}$ denotes the \tit{symmetric group of order} $r$.} and $V_{1},\,V_{2},\,\cdots,\,V_{r} \in T_{p}\mca{M}$,
+    \[ P\omega(V_{1},V_{2},\cdots,V_{r}) \equiv \omega(V_{P(1)},V_{P(2)},\cdots,V_{P(r)}) \]
+    The component of $P\omega$ is given by
+    \[ P\omega(e_{\mu_{1}},e_{\mu_{2}},\cdots,e_{\mu_{r}}) = \omega_{\mu_{P(1)}\mu_{P(2)}\cdots\mu_{P(r)}} \]
+\end{definition}
+
+\begin{definition}[Symmetrizer and antisymmetrizer]
+    \hphantom{.}
+    \begin{itemize}
+        \item[(1)] The \tbf{symmetrizer} $\mca{S}$ is defined by 
+        \[ \mca{S}\omega \equiv \frac{1}{r!}\sum_{P \in S_{r}} P\omega \]
+        Note that $\mca{S}\omega$ is \tbf{totally symmetric}: $P\mca{S}\omega = \mca{S}\omega$ for arbitrary $P \in S_{r}$.
+        \item[(2)] The \tbf{antisymmetrizer} $\mca{A}$ is defined by 
+        \[ \mca{A}\omega \equiv \frac{1}{r!}\sum_{P \in S_{r}} \mrm{sgn}(P)P\omega \]
+        where $\mrm{sgn}(P) = +1$ for even permutations and $\mrm{sgn}(P) = -1$ for odd permutations. Note that $\mca{A}\omega$ is \tbf{totally antisymmetric}: $P\mca{A}\omega = \mrm{sgn}(P)\mca{A}\omega$ for arbitrary $P \in S_{r}$.
+    \end{itemize}
+\end{definition}
+
+\seprule
+
+\begin{definition}[Differential forms]
+    A \tbf{differential form of order} $r$ (or an $r$-\tbf{form}) is a totally antisymmetric tensor of type $(0,r)$. The vector space of $r$-forms in $p \in \mca{M}$ is denoted by $\Omega_{p}^{r}(\mca{M})$.
+\end{definition}
+\begin{remark}
+    One-form like $\d{x}^{\mu}$ is a differential form of order 1.
+\end{remark}
+
+Then, how can we construct $r$-forms from $r$ one-forms?
+
+\begin{definition}[Wedge product]
+    The \tbf{wedge product} $\wedge$ of $r$ one-forms is defined by the totally antisymmetric tensor product.
+    \[ \d{x}^{\mu_{1}} \wedge \d{x}^{\mu_{2}} \wedge \cdots \wedge \d{x}^{\mu_{r}} \equiv \sum_{P \in S_{r}} \mrm{sgn}(P) \,\d{x}^{\mu_{P(1)}} \otimes \cdots \otimes \d{x}^{\mu_{P(r)}} \]
+\end{definition}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{example}
+    Let's construct 2-form and 3-form from the one-form $\d{x}^{\mu}$.
+    \begin{itemize}
+        \item[(1)] Since $|S_{2}| = 2$, two terms emerge.
+        \[ \d{x}^{\mu} \wedge \d{x}^{\nu} = \d{x}^{\mu} \otimes \d{x}^{\nu} - \d{x}^{\nu} \otimes \d{x}^{\mu} \]
+        \item[(2)] Since $|S_{3}| = 6$,
+        \begin{align*}
+            \d{x}^{\lambda} \wedge \d{x}^{\mu} \wedge \d{x}^{\nu} &= \d{x}^{\lambda} \otimes \d{x}^{\mu} \otimes \d{x}^{\nu} - \d{x}^{\lambda} \otimes \d{x}^{\nu} \otimes \d{x}^{\mu} \\
+            & \quad+ \d{x}^{\mu} \otimes \d{x}^{\nu} \otimes \d{x}^{\lambda} - \d{x}^{\mu} \otimes \d{x}^{\lambda} \otimes \d{x}^{\nu} \\
+            & \quad+ \d{x}^{\nu} \otimes \d{x}^{\lambda} \otimes \d{x}^{\mu} - \d{x}^{\nu} \otimes \d{x}^{\mu} \otimes \d{x}^{\lambda}
+        \end{align*}
+    \end{itemize}
+\end{example}
+
+\begin{obs}
+    The wedge product satisfies:
+    \begin{itemize}
+        \item[(1)] $\d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}} = 0$ if some index $\mu_{i}$ appears at least twice.
+        \item[(2)] $\d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}} = \mrm{sgn}(P)\d{x}^{\mu_{P(1)}} \wedge \cdots \wedge \d{x}^{\mu_{P(r)}}$ (the constructed $r$-form is totally antisymmetric).
+        \item[(3)] $\d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}}$ is linear in each $\d{x}^{\mu}$ (since $r$-forms are $(0,r)$-tensors).
+    \end{itemize}
+\end{obs}
+
+\seprule
+
+\begin{obs}
+    The set of $r$-forms $\d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}}$ forms a basis of $\Omega_{p}^{r}(\mca{M})$ and for $\omega \in \Omega_{p}^{r}(\mca{M})$,
+    \begin{align*}
+        \omega &= \omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\mu_{1}}\otimes\d{x}^{\mu_{2}}\otimes\cdots\otimes\d{x}^{\mu_{r}} \\
+        &= \textcolor{red}{\boxed{\frac{1}{r!}\omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\mu_{1}}\wedge\d{x}^{\mu_{2}}\wedge\cdots\wedge\d{x}^{\mu_{r}}}}
+    \end{align*}
+\end{obs}
+
+\begin{obs}
+    Consider a (0,2)-tensor $\omega_{\mu\nu}$. This tensor can be decomposed into symmetric and antisymmetric parts: the symmetric part
+    \[ \sigma_{\mu\nu} = \frac{\omega_{\mu\nu} + \omega_{\nu\mu}}{2} \quad\rightarrow\quad \sigma_{\mu\nu}\,\d{x}^{\mu}\wedge\d{x}^{\nu} = 0 \]
+    and antisymmetric part
+    \[ \alpha_{\mu\nu} = \frac{\omega_{\mu\nu} - \omega_{\nu\mu}}{2} \quad\rightarrow\quad \alpha_{\mu\nu}\,\d{x}^{\mu}\wedge\d{x}^{\nu} = \frac{\omega_{\mu\nu} - \omega_{\nu\mu}}{2}\,\d{x}^{\mu}\wedge\d{x}^{\nu} = \omega_{\mu\nu}\,\d{x}^{\mu}\wedge\d{x}^{\nu} \]
+    Observe that only antisymmetric part of $\omega_{\mu\nu}$ can contribute to two-form.
+\end{obs}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{obs}
+    Since there are $\binom{m}{r}$ choices in the set $(\mu_{1},\cdots,\mu_{r})$ from $(1,\cdots,m)$,
+    \[ \dim\Omega_{p}^{r}(\mca{M}) = \binom{m}{r} \]
+    \begin{itemize}
+        \item[-] Define $\Omega_{p}^{0}(\mca{M}) \equiv \mbb{R}$.
+        \item[-] $\Omega_{p}^{1}(\mca{M}) = T_{p}^{\ast}\mca{M}$ ($\dim T_{p}^{\ast}\mca{M} = m)$.
+        \item[-] If $r \ngeq m$, some index appears at least twice in the antisymmetrical sum, so such differential form vanishes.
+        \item[-] Since $\binom{m}{r} = \binom{m}{m-r}$, $\dim\Omega_{p}^{r}(\mca{M}) = \dim\Omega_{p}^{m-r}(\mca{M})$.
+        \item[-] Moreover, since $\Omega_{p}^{r}(\mca{M})$ is a vector space, $\Omega_{p}^{r}(\mca{M}) \simeq \Omega_{p}^{m-r}(\mca{M})$.
+    \end{itemize}
+\end{obs}
+
+Until now, we used \tit{wedge product} to construct $r$-forms. Can we make higher-order forms by combining $q$-forms and $r$-forms? Yes.
+\begin{definition}
+    The \tbf{exterior product} of a $q$-form and a $r$-form
+    \[ \wedge \,:\, \Omega_{p}^{q}(\mca{M}) \times \Omega_{p}^{r}(\mca{M}) \rightarrow \Omega_{p}^{q+r}(\mca{M}) \]
+    is defined by a trivial extension. For $\omega \in \Omega_{p}^{q}(\mca{M})$ and $\xi \in \Omega_{p}^{r}(\mca{M})$, the action of the $(q+r)$-form $\omega\wedge\xi$ on $(q+r)$ vectors is defined by
+    \[ (\omega\wedge\xi)(V_{1},\cdots,V_{q+r}) = \frac{1}{q!r!}\sum_{P \in S_{q+r}} \mrm{sgn}(P)\omega(V_{P(1)},\cdots,V_{P(q)})\xi(V_{P(q+1)},\cdots,V_{P(q+r)}) \]
+\end{definition}
+
+\begin{remark}
+    If $q+r > m$, $\omega\wedge\xi$ vanishes naturally.
+\end{remark}
+\begin{remark}
+    With this exterior product, we define an algebra
+    \[ \Omega_{p}^{\ast}(\mca{M}) \equiv \Omega_{p}^{0}(\mca{M}) \oplus \Omega_{p}^{1}(\mca{M}) \oplus \cdots \oplus \Omega_{p}^{m}(\mca{M}) \]
+    $\Omega_{p}^{\ast}(\mca{M})$ denotes the space of all differential forms at $p$. This space is closed under the exterior product. Moreover, we may assign an $r$-form \tit{smoothly} at each point on a manifold $\mca{M}$. We denote the space of smooth $r$-forms on $\mca{M}$ by $\Omega^{r}(\mca{M})$.
+\end{remark}
+
+\begin{table}[htbp]
+    \begin{center}
+        \begin{tabular}{ccc}
+            \hline
+            $r$-form & Basis & Dimension \\
+            \hline
+            $\Omega^{0}(\mca{M}) = \mca{F}(\mca{M})$ & $\{1\}$ & 1 \\
+            $\Omega^{1}(\mca{M}) = T^{\ast}\mca{M}$ & $\{\d{x}^{\mu}\}$ & $m$ \\
+            $\Omega^{2}(\mca{M})$ & $\{\d{x}^{\mu_{1}}\wedge\d{x}^{\mu_{2}}\}$ & $m(m-1)/2!$ \\
+            $\Omega^{3}(\mca{M})$ & $\{\d{x}^{\mu_{1}}\wedge\d{x}^{\mu_{2}}\wedge\d{x}^{\mu_{3}}\}$ & $m(m-1)(m-2)/3!$ \\
+            \vdots & \vdots & \vdots \\
+            $\Omega^{m}(\mca{M})$ & $\{\d{x}^{1}\wedge\cdots\wedge\d{x}^{m}\}$ & 1 \\
+            \hline
+        \end{tabular}
+        \caption{The space of smooth $r$-forms.}
+    \end{center}
+\end{table}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Consider a Cartesian coordinates $(x,y)$ in $\mbb{R}^{2}$. Show that
+    \[ \d{x} \wedge \d{y} = r\,\d{r} \wedge \d{\theta} \]
+\end{exer}
+
+\begin{proof}
+    \begin{align*}
+        \d{x} \wedge \d{y} &= \d{x} \otimes \d{y} - \d{y} \otimes \d{x} \\
+        &= (\cos\theta\,\d{r} - r\sin\theta\,\d{\theta}) \otimes (\sin\theta\,\d{r} + r\cos\theta\,\d{\theta}) \\
+        & \qquad\qquad - (\sin\theta\,\d{r} + r\cos\theta\,\d{\theta}) \otimes (\cos\theta\,\d{r} - r\sin\theta\,\d{\theta}) \\
+        &= r\,d{r} \otimes \d\theta - r\,\d\theta \otimes \d{r} = r\,\d{r}\wedge\d\theta
+    \end{align*}
+\end{proof}
+
+We conclude this lecture by proving several important properties of exterior products. Before we do that, we prove this useful lemma first.
+
+\begin{lemma}
+    Let $\xi \in \Omega_{p}^{q}(\mca{M})$ and $\eta \in \Omega_{p}^{r}(\mca{M})$. Then
+    \[ \mca{A}(\mca{A}(\xi) \otimes \eta) = \mca{A}(\xi \otimes \eta) \]
+\end{lemma}
+
+\begin{proof}
+    By definition,
+    \[ \mca{A}(\mca{A}(\xi) \otimes \eta) = \frac{1}{(q+r)!}\sum_{\sigma\in S_{q+r}}\mrm{sgn}(\sigma)\sigma\left(\frac{1}{q!}\sum_{\tau \in S_{q}} \mrm{sgn}( \tau)\tau\xi \otimes \eta\right) \]
+    If we interpret $\tau \in S_{q}$ as a permutation in $S_{q+r}$ such that $\tau(i) = i \;(i = q+1, \cdots, q+r)$, $\tau\xi \otimes \eta = \tau(\xi\otimes\eta)$.
+    \[ \phantom{\mca{A}(\mca{A}(\xi) \otimes \eta)} = \frac{1}{q!(q+r)!}\sum_{\sigma \in S_{q+r}}\sum_{\tau \in S_{q}}\mrm{sgn}(\sigma)\mrm{sgn}(\tau)(\sigma\tau)(\xi\otimes\eta) \]
+    Let $\mu = \sigma\tau \in S_{q+r}$. For each $\mu$, there are $q!$ ways to write $\mu = \sigma\tau$ with $\sigma \in S_{q+r}$ and $\tau \in S_{q}$, because each $\tau \in S_{q}$ determines a unique $\sigma$ by $\sigma = \mu\tau^{-1}$. Hence,
+    \[ \phantom{\mca{A}(\mca{A}(\xi) \otimes \eta)} = q! \cdot \frac{1}{q!(q+r)!}\sum_{\mu \in S_{q+r}}\mrm{sgn}(\mu)\mu(\xi\otimes\eta) = \mca{A}(\xi\otimes\eta) \]
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Let $\xi \in \Omega_{p}^{q}(\mca{M}),\,\eta \in \Omega_{p}^{r}(\mca{M})$ and $\omega \in \Omega_{p}^{s}(\mca{M})$. Show that
+    \begin{itemize}
+        \item[(1)] $\xi \wedge \xi = 0$ if $q$ is odd.
+        \item[(2)] $\xi \wedge \eta = (-1)^{qr}\eta \wedge \xi$.
+        \item[(3)] $(\xi\wedge\eta)\wedge\omega = \xi\wedge(\eta\wedge\omega)$.
+    \end{itemize}
+\end{exer}
+
+\begin{proof}
+    \hphantom{.}
+    \begin{itemize}
+        \item[(1)] Let $V_{1},\cdots,V_{2q} \in T_{p}\mca{M}$.
+        \begin{align*}
+            (\xi\wedge\xi)(V_{1},\cdots,V_{2q}) &= \frac{1}{(q!)^{2}}\sum_{P \in S_{2q}}\mrm{sgn}(P)\xi(V_{P(1)},\cdots,V_{P(q)})\xi(V_{P(q+1)},\cdots,V_{P(2q)}) \\
+            &= -\frac{1}{(q!)^{2}}\sum_{P \in S_{2q}}\mrm{sgn}(P)\xi(V_{P(q+1)},\cdots,V_{P(2q)})\xi(V_{P(1)},\cdots,V_{P(q)}) = 0
+        \end{align*}
+        Here, changing permutation 
+        \[ (P(1),\cdots,P(q),P(q+1),\cdots,P(2q)) \]
+        to
+        \[ (P(q+1),\cdots,P(2q),P(1),\cdots,P(q)) \]
+        requires $q^{2}$ swaps. Hence, if $q$ is odd, additional (-1) factor arises.
+        \item[(2)] In the exactly same manner, you can show that $(-1)^{qr}$ factor arises from changing the order of two forms.
+        \item[(3)] By definition,
+        \begin{align*}
+            (\xi \wedge \eta) \wedge \omega) &= \frac{(q+r+s)!}{(q+r)!s!} \mca{A}((\xi\wedge\eta) \otimes \omega) \\
+            &= \frac{(q+r+s)!}{(q+r)!s!} \frac{(q+r)!}{q!r!} \mca{A}(\mca{A}(\xi \otimes \eta) \otimes \omega) \\
+            &= \frac{(q+r+s)!}{q!r!s!}\mca{A}(\xi \otimes \eta \otimes \omega) \quad (\because \text{\textbf{Lemma 7.12}})
+        \end{align*}
+        You can yield same expression for $\xi \wedge (\eta \wedge \omega)$.
+    \end{itemize}
+\end{proof}
+
+\end{document}
