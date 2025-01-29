@@ -1,0 +1,215 @@
+\documentclass[a4paper, 10pt]{article}
+\linespread{1.33}
+\input{../preamble.tex}
+\input{../usercommand.tex}
+
+\newcommand\lecturenumber{12}
+\newcommand\lecturedate{Jan 3, 2025}
+
+\pagestyle{fancyplain}
+\headheight 40pt
+\lhead{Lecture \lecturenumber\\CNBC Deep Learning Subgroup}
+\rhead{Riemannian Geometry for Deep Learning \\\lecturedate}
+\cfoot{Fall 2024, SNU}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+\setcounter{section}{7}
+\section{Lie Groups and Lie Algebras}
+
+\subsection{Lie Groups}
+
+\begin{definition}[Lie group]
+    A \tbf{Lie group} $G$ is a differentiable manifold which is endowed with group operations
+    \begin{align*}
+        \bullet &\,:\, G \times G \rightarrow G, \quad (g_{1},g_{2}) \mapsto g_{1} \cdot g_{2} \\
+        {}^{-1} &\,:\, G \rightarrow G, \quad g \mapsto g^{-1}
+    \end{align*}
+    are smooth($\mca{C}^{\infty}$).
+\end{definition}
+
+\begin{remark}
+    The identity element of a Lie group is written as $e$.
+\end{remark}
+
+\begin{exer}
+    Show that the following groups are Lie groups.
+    \begin{itemize}
+        \item[(1)] $(\mbb{R}^{+}, \times)$
+        \item[(2)] $(\mbb{R}, +)$
+        \item[(3)] $(\mbb{R}^{2}, +)$ with $(x_{1},y_{1}) + (x_{2},y_{2}) = (x_{1}+x_{2},y_{1}+y_{2})$
+        \item[(4)] $S^{1} = \{ e^{i\theta} \,|\, \theta \in \mbb{R} \, (\mrm{mod} \,2\pi)\}$ with\footnote{We call this group $\mrm{U}(1)$.}
+        \[ e^{i\theta}e^{i\varphi} = e^{i(\theta+\varphi)}, \; (e^{i\theta})^{-1} = e^{-i\theta} \]
+    \end{itemize}
+\end{exer}
+
+\begin{proof}
+    The proof is simple. Hence, it is left for the readers.
+\end{proof}
+
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{example}
+    Let's take a look at \tbf{matrix groups}.
+    \begin{itemize}
+        \item[(1)] The group of $n \times n$ invertible matrices is called the \tbf{general linear group}, $\mrm{GL}(n,\mbb{R})$ and $\mrm{GL}(n,\mbb{C})$.
+        \item[(2)] If we add additional $\det M = +1$ constraint, it is called the \tbf{special linear group}.
+        \begin{align*}
+            \mrm{SL}(n, \mbb{R}) &= \{ M \in \mrm{GL}(n, \mbb{R}) \,|\, \det M = +1 \} \\
+            \mrm{SL}(n, \mbb{C}) &= \{ M \in \mrm{GL}(n, \mbb{C}) \,|\, \det M = +1 \}
+        \end{align*}
+        \item[(3)] The groups of isometries (or \tit{rigid motions}) of $\mbb{R}^{n}$ are called \tbf{orthogonal groups} and \tbf{special orthogonal groups}.
+        \begin{align*}
+            \mrm{O}(n) &= \{ M \in \mrm{GL}(n, \mbb{R}) \,|\, MM^{\msf{T}} = M^{\msf{T}}M = I_{n} \} \\
+            \mrm{SO}(n) &= \mrm{O}(n) \cap \mrm{SL}(n, \mbb{R})
+        \end{align*}
+        \item[(4)] In $\mbb{C}^{n}$, groups with the same analogy are called \tbf{unitary groups} and \tbf{special unitary groups}.
+        \begin{align*}
+            \mrm{U}(n) &= \{ M \in \mrm{GL}(n, \mbb{C}) \,|\, MM^{\dagger} = M^{\dagger}M = I_{n} \} \\
+            \mrm{SU}(n) &= \mrm{U}(n) \cap \mrm{SL}(n, \mbb{C})
+        \end{align*}
+        \item[(5)] The Lorentz group is also a Lie group,
+        \[ \mrm{O}(1,3) = \{ M \in \mrm{GL}(4, \mbb{R}) \,|\, M\eta M^{\msf{T}} = \eta \} \]
+        where $\eta = \mrm{diag}(-1, 1, 1, 1)$ is the Minkowski metric.
+    \end{itemize}
+\end{example}
+
+Although we do not prove this, but I state an important theorem here.
+\begin{theorem}
+    Every closed subgroup $H$ of a Lie group $G$ is a Lie subgroup.
+\end{theorem}
+
+\seprule
+
+Let $G$ be a group and $H \leq G$. For $g \in G$, a left(right) \tbf{coset} is defined by
+\[ gH = \{ gh \,|\, h \in H \}, \; Hg = \{ hg \,|\, h \in H \} \]
+We say that $H$ is a \tbf{normal subgroup} of $G$ (or $H \trianglelefteq G$) if
+\[ g \in G,\, h \in H \;\Longrightarrow\; ghg^{-1} \in H \]
+In terms of cosets, if $N \trianglelefteq G$, $gN = Ng$ for $g \in G$. If $N$ is a normal subgroup of $G$, we call $G/N$, the set of \tit{cosets} of $N$, the \tbf{quotient group}.
+
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+Let's consider $\mbb{Z}$ and $2\mbb{Z}$ as examples. Here, $2\mbb{Z}$ is the set of even numbers.
+\begin{align*}
+    \mbb{Z} &= \{ \cdots,\, -2,\, -1,\, 0,\, 1,\, 2,\, \cdots \} \\
+    2\mbb{Z} &= \{ \cdots,\, -4,\, -2,\, 0,\, 2,\, 4,\, \cdots \}
+\end{align*}
+What are the cosets of $2\mbb{Z}$? Take several elements from $\mbb{Z}$ to compute cosets. Then,
+\begin{align*}
+    0 + 2\mbb{Z} &= \{ \cdots,\, -4,\, -2,\, 0,\, 2,\, 4,\, \cdots \} \\
+    1 + 2\mbb{Z} &= \{ \cdots,\, -3,\, -1,\, 1,\, 3,\, 5,\, \cdots \} \\
+    2 + 2\mbb{Z} &= \{ \cdots,\, -2,\, 0,\, 2,\, 4,\, 6,\, \cdots \} = 0 + 2\mbb{Z} \\
+    3 + 2\mbb{Z} &= \{ \cdots,\, -1,\, 1,\, 3,\, 5,\, 7,\, \cdots \} = 1 + 2\mbb{Z} 
+\end{align*}
+We can see that $\mbb{Z}$ is \tit{partitioned} by $0 + 2\mbb{Z}$ and $1 + 2\mbb{Z}$! So we say
+\[ \boxed{\mbb{Z} / 2\mbb{Z} \simeq \{0, 1\}} \]
+
+\seprule
+
+\begin{definition}[Coset space]
+    Let $G$ be a Lie group and $H$ be a Lie subgroup of $G$. Define an
+    \begin{itemize}
+        \item[-] \tbf{equivalence relation} $\sim$ by $g \sim g'$ if $\exists\,h\in H \;\text{s.t.}\; g'=gh$
+        \item[-] \tbf{equivalence class} $[g] = \{ gh \,|\, h \in H \} = gH$.
+    \end{itemize}
+    Then the \tbf{coset space} $G/H$ is a manifold (not necessarily a Lie group) with $\dim G/H = \dim G - \dim H$.
+\end{definition}
+
+\begin{obs}
+    $G/H$ is a Lie group if $H \trianglelefteq G$\footnote{In other words, for arbitrary $g \in  G$ and $h \in H$, $ghg^{-1} \in H$.}.
+    \begin{itemize}
+        \item[-] Take $gH,\, g'H \in G/H$. If the group structure is well-defined in $G/H$, the product $(gH)(g'H)$ must be independent of the choice of representatives.
+        \item[-] Let $gh$ and $g'h'$ be the representatives of $gH$ and $g'H$, respectively. Then
+        \[ ghg'h' = gg'h''h' \in (gg')H \]
+        Since there exists $h'' \in H$ such that $h'' = (g')^{-1}h((g')^{-1})^{-1}$. Therefore, group multiplication is well-defined.
+        \item[-] Let $gh$ and $g'h'$ be the representation of $gH$ and $(gH)^{-1}$. Then $(gH)(gH)^{-1} = eH$ should hold.
+        \[ ghg'h' = gg'h''h' = \underbrace{gg'}_{e}\underbrace{h''h'}_{\in H} \quad \Longrightarrow \quad (gH)^{-1} = g^{-1}H \]
+        Hence, inverse element is well-defined.
+    \end{itemize}
+\end{obs}
+
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\subsection{Lie Algebras}
+
+\begin{definition}[Translations]
+    Let $a$ and $g$ be elements of a Lie group $G$. The \tbf{right-(left-)translation} of $g$ by $a$
+    \[ R_{a} \,:\, G \rightarrow G, \quad R_{a}g = ga \]
+    and
+    \[ L_{a} \,:\, G \rightarrow G, \quad L_{a}g = ag \]
+    are diffeomorphisms\footnote{why?}. Hence, these maps induce
+    \[ R_{a\ast} \,:\, T_{g}G \rightarrow T_{ga}G, \quad L_{a\ast} \,:\, T_{g}G \rightarrow T_{ag}G \]
+\end{definition}
+
+\begin{remark}
+    Both right- and left-translation are suitable for the further discussion, but we will mainly consider the left-translations.
+\end{remark}
+
+\begin{obs}
+    The diffeomorphism $L_{a}$ takes the identity $e$ to the element $a$, and induces $L_{a\ast,e} \,:\, T_{e}G \rightarrow T_{a}G$. Hence, if we can describe $T_{e}G$ at identity, then $L_{a\ast}T_{e}G$ will give a description of the tangent space $T_{g}G$ at any point $g \in G$.
+\end{obs}
+
+\seprule
+
+\begin{definition}[Left-invariant vector fields]
+    Let $X$ be a vector field on a Lie group $G$. For any $g \in G$, because left-translation $L_{a} \,:\, G \rightarrow G$ is a diffeomorphism, the \tit{pushforward} $L_{a\ast}X$ is a well-defined vector field on $G$. We say that the vector field $X$ is \tbf{left-invariant} if
+    \[ \boxed{L_{a\ast}X = X} \; \text{or} \; \boxed{L_{a\ast}X|_{g} = X|_{ag}} \]
+\end{definition}
+
+\begin{obs}
+    A left-invariant vector field $X$ is completely determined by its value $X|_{e}$ at the identity, since
+    \[ \boxed{X|_{g} = L_{g\ast}X|_{e}} \; \cdots \; (\ast) \]
+    \tit{Conversely}, given a tangent vector $X|_{e} \in T_{e}G$, we can define a vector field $X$ on $G$ by $(\ast)$. So defined, the vector field $X$ is left-invariant.
+    \begin{align*}
+        L_{a\ast}X|_{g} &= L_{a\ast}L_{g\ast}X|_{e} = (L_{a} \circ L_{g})_{\ast} X|_{e} \quad (\because \; \text{Exercise 5.9}) \\
+        &= (L_{ag})_{\ast}X|_{e} = X|_{ag}
+    \end{align*}
+    Thus, there is a \tbf{one-to-one-correspondence} ($X|_{e} \;\leftrightarrow\; X$)
+    \[ T_{e}G \; \leftrightarrow \; \mathfrak{g} := \{ \text{left-invariant vector fields on } G \} \]
+\end{obs}
+
+\begin{remark}
+    If $X|_{g} = L_{g\ast}X|_{e}$ for all $g \in G$, we call $X$ the \tit{left-invariant vector field on $G$ generated by $X|_{e}$}.
+\end{remark}
+
+\begin{remark}
+    The map $T_{e}G \,:\, \mathfrak{g}$ defined by $V \mapsto X_{V}$ is an \tit{isomorphism}: $\dim G = \dim \mathfrak{g}$. Hence, $\mathfrak{g}$ is a vector space isomorphic to $T_{e}G$.
+\end{remark}
+
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Verify that a left-invariant vector field $X$ satisfies
+    \begin{align*}
+        L_{a\ast}X|_{g} &= X^{\mu}(g)\frac{\partial x^{\nu}(ag)}{\partial x^{\mu}(g)} \partial_{\nu}|_{ag} \quad (\because \; \text{definition of pushforward}) \\
+        &= X^{\nu}(ag)\partial_{\nu}|_{ag}
+    \end{align*}
+\end{exer}
+
+\begin{proof}
+    The exercise itself is the proof.
+\end{proof}
+
+\begin{obs}
+    Since $\mathfrak{g}$ is a set of vector fields, $\mathfrak{g} \subseteq \mathscr{X}(G)$. Let's show that $\mathfrak{g}$ is closed under the \tit{Lie bracket}. Take two points $g$ and $ag = L_{a}g \in G$. Then,
+    \[ L_{a\ast}[X,Y]|_{g} = [L_{a\ast}X|_{g}, L_{a\ast}Y|_{g}] = [X,Y]|_{ag} \]
+    by \tbf{Exercise 6.10(b)}. Hence, $[X,Y]$ is an another left-invariant vector field: $[X,Y] \in \mathfrak{g}$.
+\end{obs}
+
+\begin{definition}[Lie algebra]
+    The set of left-invariant vector fields $\mathfrak{g}$ with the Lie bracket
+    \[ [\;,\;] \,:\, \mathfrak{g} \times \mathfrak{g} \rightarrow \mathfrak{g} \]
+    is called the \tbf{Lie algebra} of a Lie group $G$.
+\end{definition}
+
+
+\end{document}

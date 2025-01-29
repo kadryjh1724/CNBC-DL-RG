@@ -1,0 +1,300 @@
+\documentclass[a4paper, 10pt]{article}
+\linespread{1.33}
+\input{../preamble.tex}
+\input{../usercommand.tex}
+
+\newcommand\lecturenumber{11}
+\newcommand\lecturedate{Dec 27, 2024}
+
+\pagestyle{fancyplain}
+\headheight 40pt
+\lhead{Lecture \lecturenumber\\CNBC Deep Learning Subgroup}
+\rhead{Riemannian Geometry for Deep Learning \\\lecturedate}
+\cfoot{Fall 2024, SNU}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+\setcounter{section}{6}
+\section{Differential Forms}
+
+\setcounter{subsection}{2}
+\subsection{Interior Product}
+
+\setcounter{theorem}{21}
+
+\begin{definition}[Interior product]
+    The \tbf{interior product} is defined by
+    \[ i_{X} \,:\, \Omega^{r}(\mca{M}) \rightarrow \Omega^{r-1}(\mca{M}), \quad i_{X}\omega(X_{1}, \cdots, X_{r-1}) = \omega(X, X_{1}, \cdots, X_{r-1}) \]
+    for $X \in \mathscr{X}(\mca{M})$ and $\omega \in \Omega^{r}(\mca{M})$. In components\footnote{This formula is from Nakahara's textbook, and it is truly horrible for beginners.}, for $X = X^{\mu}\partial_{\mu}$ and $\displaystyle{\omega = \frac{1}{r!}\omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\mu_{1}}\wedge\cdots\wedge\d{x}^{\mu_{r}}}$,
+    \begin{align*}
+        i_{X}\omega &= \frac{1}{r!}\sum_{s=1}^{r}X^{\mu_{s}}\omega_{\mu_{1}\cdots\mu_{s}\cdots\mu_{r}} (-1)^{s-1}\,\d{x}^{\mu_{1}}\wedge\cdots\wedge\widehat{\d{x}^{\mu_{s}}}\wedge\cdots\wedge\d{x}^{\mu_{r}} \\
+        &= \frac{1}{(r-1)!} X^{\nu}\omega_{\nu\mu_{2}\cdots\mu_{r}} \,\d{x}^{\mu_{2}}\wedge\cdots\wedge\d{x}^{\mu_{r}}
+    \end{align*}
+    where the term with hat denotes the \tit{omitted} term.
+\end{definition}
+
+\begin{remark}
+    The interior product is the \tit{unique} antiderivation of degree -1 on the exterior algebra.
+\end{remark}
+
+\seprule
+
+\begin{obs}
+    How can we obtain the Nakahara formula? Let me start from the component expression of $r$-forms.
+    \[ \omega = \omega_{\mu_{1}\cdots\mu_{r}} \, \d{x}^{\mu_{1}} \otimes \cdots \otimes \d{x}^{\mu_{r}} = \frac{1}{r!} \omega_{\mu_{1}\cdots\mu_{r}} \, \d{x}^{\mu_{1}} \wedge \otimes \wedge \d{x}^{\mu_{r}} \]
+    Interior product is a \tit{contraction} on the first index of $\omega$ with $X$.
+    \begin{align*}
+        i_{X}\omega &= X^{\nu}\omega_{\nu\mu_{2}\cdots\mu_{r}} \, \d{x}^{\mu_{2}} \otimes \cdots \otimes \d{x}^{\mu_{r}} \qquad (\because \; \left<\d{x}^{\mu_{1}}, \partial_{\nu} \right> = \delta^{\mu_{1}}{}_{\nu}) \\
+        &= \frac{1}{(r-1)!} X^{\nu}\omega_{\nu\mu_{2}\cdots\mu_{r}} \, \d{x}^{\mu_{2}} \wedge \cdots \wedge \d{x}^{\mu_{r}}
+    \end{align*}
+    But since $\omega$ is alternating, we could contract over all of the $r$ indices and get the same thing, yielding a sum with $r$ equal terms.
+    \[ i_{X}\omega = \frac{1}{r} \cdot \frac{1}{(r-1)!} \sum_{r=1}^{r} X^{\mu_{s}} \omega_{\mu_{1}\cdots\mu_{s}\cdots\mu_{r}} (-1)^{s-1} \, \d{x}^{\mu_{1}} \wedge \cdots \wedge \widehat{\d{x}^{\mu_{s}}} \wedge \cdots \wedge \d{x}^{\mu_{r}} \]
+\end{obs}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{example}
+    In $\mbb{R}^{3}$, $i_{e_{x}}(\d{x}\wedge\d{y}) = \d{y}$.
+    \begin{itemize}
+        \item[-] Note that
+        \begin{align*}
+            \d{x} \wedge \d{y} &= \frac{1}{2!}\omega_{\mu\nu} \, \d{x}^{\mu} \wedge \d{x}^{\nu} \\
+            &= \frac{1}{2}(\omega_{xy}\,\d{x}\wedge\d{y} + \cancel{\omega_{yz}\,\d{y}\wedge\d{z}} + \cancel{\omega_{zx}\,\d{z}\wedge\d{x}} + \omega_{yx}\,\d{y}\wedge\d{x} + \cancel{\omega_{zy}\,\d{z}\wedge\d{y}} + \cancel{\omega_{xz}\,\d{x}\wedge\d{z}}) \\
+            &= \omega_{xy}\,\d{x}\wedge\d{y} \quad (\because \; \omega, \, \text{antisymmetric})
+        \end{align*}
+        Hence, $\d{x}\wedge\d{y}$ is a two-form $\omega$ with components $\omega_{xy}=-\omega_{yx}=1$ and zero otherwise.
+        \item[-] Therefore
+        \[ i_{e_{x}}(\d{x}\wedge\d{y}) = \begin{bmatrix}1 & 0 & 0\end{bmatrix}\begin{bmatrix}0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 0\end{bmatrix} = \begin{bmatrix}0 & 1 & 0\end{bmatrix} = \d{y} \]
+        \item[-] Similarly,
+        \begin{align*}
+            i_{e_{x}}\underbrace{(\d{y}\wedge\d{z})}_{\omega_{yz} = 1} &= \begin{bmatrix}1 & 0 & 0\end{bmatrix}\begin{bmatrix}0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & -1 & 0\end{bmatrix} = \begin{bmatrix}0 & 0 & 0\end{bmatrix} = 0 \\
+            i_{e_{x}}\underbrace{(\d{z}\wedge\d{x})}_{\omega_{zx} = 1} &= \begin{bmatrix}1 & 0 & 0\end{bmatrix}\begin{bmatrix}0 & 0 & -1 \\ 0 & 0 & 0 \\ 1 & 0 & 0\end{bmatrix} = \begin{bmatrix}0 & 0 & -1\end{bmatrix} = -\d{z}
+        \end{align*}
+    \end{itemize}
+\end{example}
+
+\begin{remark}
+    For $\omega \in \Omega^{2}(\mca{M})$, $i_{X}\omega = X^{\mu}\omega_{\mu\nu}\,\d{x}^{\nu}$.
+\end{remark}
+
+\begin{exer}
+    Let
+    \[ X = y\frac{\partial}{\partial{x}} + 2x\frac{\partial}{\partial{y}} + 3xy\frac{\partial}{\partial{z}} = \begin{bmatrix}y & 2z & 3xy\end{bmatrix}^{\msf{T}} \in T_{p}\mca{M} \]
+    and
+    \[ \omega = 2z\,\d{x} + 3x\,\d{y} - 7zx^{2}\,\d{z} = \begin{bmatrix}2z & 3x & -7zx^{2}\end{bmatrix}^{\msf{T}} \]
+    \begin{itemize}
+        \item[(1)] Compute $\d\omega$, the exterior derivative.
+        \item[(2)] Compute $i_{X}(\d\omega)$.
+        \item[(3)] Compute $\d(i_{X}\omega)$ and $\d(i_{X}\omega) + i_{X}(\d\omega)$.
+        \item[(4)] Compute $\mca{L}_{X}\omega$ and compare with (3).
+    \end{itemize}
+\end{exer}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{proof}
+    \hphantom{.}
+    \begin{itemize}
+        \item[(1)] See \tbf{Example 7.15}.
+        \begin{align*}
+            \d\omega &= \left[\frac{\partial\omega_{y}}{\partial{x}} - \cancel{\frac{\partial\omega_{x}}{\partial{y}}}\right]\,\d{x}\wedge\d{y} + \left[\cancel{\frac{\partial\omega_{z}}{\partial{y}}} - \cancel{\frac{\partial\omega_{y}}{\partial{z}}}\right]\,\d{y}\wedge\d{z} + \left[\frac{\partial\omega_{x}}{\partial{z}} - \frac{\partial\omega_{z}}{\partial{x}}\right]\,\d{z}\wedge\d{x} \\
+            &= 3 \, \d{x}\wedge\d{y} + (14zx + 2) \, \d{z}\wedge\d{x}
+        \end{align*}
+        \item[(2)] Note that $(i_{X}(\d\omega))_{\mu} = X^{\nu}(\d\omega)_{\nu\mu} = (\d\omega)^{\msf{T}}_{\mu\nu}X^{\nu}$.
+        \[ i_{X}(\d\omega) = (\d\omega)^{\msf{T}}X = \begin{bmatrix}0 & -3 & 14zx + 2 \\ 3 & 0 & 0 \\ -(14zx + 2) & 0 & 0\end{bmatrix}\begin{bmatrix}y \\ 2z \\ 3xy\end{bmatrix} = \begin{bmatrix}-6z + 6xy + 42x^{2}yz\end{bmatrix} \]
+        Hence, $i_{X}(\d\omega) = (-6z+6xy+42x^{2}yz)\,\d{x} + 3y\,\d{y} - (14xyz + 2y)\,\d{z}$.
+        \item[(3)] $i_{X}\omega = \omega(X) = 2yz + 6zx - 21x^{3}yz$. So
+        \[ \d i_{X}\omega = (6z-63x^{2}yz)\,\d{x} + (2z-21x^{3}z)\,\d{y} + (6x+2y-21x^{3}y)\,\d{z} \]
+        and
+        \[ \d i_{X}\omega + i_{X}(\d\omega) = (6xy-21x^{2}yz)\,\d{x} + (2z-21x^{3}z)\,\d{y} + (6x-14xyz-21x^{3}y)\,\d{z} \]
+        \item[(4)] By definition, $\mca{L}_{X}\omega = (X^{\nu}\partial_{\nu}\omega_{\mu} + \partial_{\mu}X^{\nu}\omega_{\nu})\,\d{x}^{\mu}$. Then
+        \[ \partial_{\nu}\omega_{\mu} = \begin{bmatrix}0 & 3 & -14zx \\ 0 & 0 & 0 \\ 2 & 0 & -7x^{2}\end{bmatrix} \;\Longrightarrow\; \begin{bmatrix}y & 2z & 3xy\end{bmatrix}\begin{bmatrix}0 & 3 & -14zx \\ 0 & 0 & 0 \\ 2 & 0 & -7x^{2}\end{bmatrix} = \begin{bmatrix}6xy \\ 3y \\ -14xyz-21x^{3}y\end{bmatrix}^{\msf{T}} \]
+        and
+        \[ \partial_{\mu}X^{\nu} = \begin{bmatrix}0 & 1 & 0 \\ 0 & 0 & 2 \\ 3y & 3x & 0\end{bmatrix} \;\Longrightarrow\; \begin{bmatrix}2z & 3x & -7zx^{2}\end{bmatrix}\begin{bmatrix}0 & 1 & 0 \\ 0 & 0 & 2 \\ 3y & 3x & 0\end{bmatrix} = \begin{bmatrix}-21x^{2}yz \\ 2z-21x^{3}z \\ 6x\end{bmatrix}^{\msf{T}} \]
+        So, $\mca{L}_{X}\omega = \d i_{X}\omega + i_{X}(\d\omega)$.
+    \end{itemize}
+\end{proof}
+Is this result a mere coincidence? It is not!
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{theorem}[Cartan's magic formula, Cartan's homotopy formula]
+    \[ \mca{L}_{X}\omega = (\d i_{X} + i_{X}\d)\omega \]
+\end{theorem}
+
+\begin{proof}
+    \tbf{Proof for 1-form.} Note that $i_{X}(\d{x}^{\mu}\wedge\d{x}^{\nu}) = X^{\mu}\,\d{x}^{\nu} - X^{\nu}\,\d{x}^{\mu}$.
+    \begin{align*}
+        (\d i_{X} + i_{X}\d)\omega &= \d(X^{\mu}\omega_{\mu}) + i_{X}\left[\frac{\partial\omega_{\nu}}{\partial{x}^{\mu}}\,\d{x}^{\mu}\wedge\d{x}^{\nu}\right] \\
+        &= \frac{\partial(X^{\mu}\omega_{\mu})}{\partial{x}^{\nu}}\,\d{x}^{\nu} + i_{X}\left[\frac{1}{2}(\partial_{\mu}\omega_{\nu} - \partial_{\nu}\omega_{\mu})\,\d{x}^{\mu}\wedge\d{x}^{\nu}\right] \\
+        &= (\omega_{\mu}\partial_{\nu}X^{\mu} + \cancel{X^{\mu}\partial_{\nu}\omega_{\mu}})\,\d{x}^{\mu} + \underbrace{\frac{1}{2}(\partial_{\mu}\omega_{\nu}-\partial_{\nu}\omega_{\mu})(X^{\mu}\,\d{x}^{\nu}-X^{\nu}\,\d{x}^{\mu})}_{=X^{\mu}(\partial_{\mu}\omega_{\nu} - \cancel{\partial_{\nu}\omega_{\mu})\,\d{x}^{\nu}}} \\
+        &= (X^{\mu}\partial_{\mu}\omega_{\nu} + \partial_{\nu}X^{\mu}\omega_{\mu})\,\d{x}^{\nu} = \mca{L}_{X}\omega
+    \end{align*}
+    \tbf{Proof for $r$-form.} Lie derivative of $r$-form is given by
+    \begin{align*}
+        \mca{L}_{X}\omega &= \lim_{\epsilon\rightarrow 0}\frac{1}{\eps}[(\sigma_{\eps})^{\ast}\omega|_{\sigma_{\eps}(x)} - \omega|_{x}] \\
+        &= X^{\nu}\frac{1}{r!}\partial_{\nu}\omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\mu_{1}}\wedge\cdots\wedge\d{x}^{\mu_{r}} + \sum_{s=1}^{r}\partial_{\mu_{s}}X^{\nu}\frac{1}{r!}\omega_{\mu_{1}\cdots{\tikzmark{starta}\nu\tikzmark{enda}}\cdots\mu_{r}} \, \d{x}^{\mu_{1}}\wedge\cdots\d{x}^{\nu}\wedge\cdots\wedge\d{x}^{\mu_{r}}
+    \end{align*}
+
+    \begin{tikzpicture}[remember picture, overlay]
+        \node [shift = {(0em, -2.5ex)}, anchor = north] at ($({pic cs:starta})!0.5!({pic cs:enda})$) (X) {$\mu_{s}$};
+        \draw [thick, -latex] (X.north) -| ($({pic cs:starta})!0.5!({pic cs:enda})+(0,-0.5ex)$);
+    \end{tikzpicture}
+
+    \begin{align*}
+        (\d i_{X}&+i_{X}\d)\omega = \d\left[\frac{1}{r!}\sum_{s=1}^{r} X^{\mu_{s}}\omega_{\mu_{1}\cdots\nu\cdots\mu_{r}} (-1)^{s-1} \, \d{x}^{\mu_{1}} \wedge \cdots \wedge \d{x}^{\mu_{r}}\right] \\
+        &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad + i_{X}\left[\frac{1}{r!}\partial_{\nu}\omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\nu}\wedge\d{x}^{\mu_{1}}\wedge\cdots\wedge\cdots\d{x}^{\mu_{r}}\right] \\
+        &= \frac{1}{r!}\sum_{s=1}^{r} (\partial_{\nu}X^{\mu_{s}}\omega_{\mu_{1}\cdots\mu_{r}} + \cancel{X^{\mu_{s}}\partial_{\nu}\omega_{\mu_{1}\cdots\mu_{r}}})(-1)^{s-1}\,\d{x}^{\mu_{1}}\wedge\cdots\widehat{\d{x}^{\mu_{s}}}\wedge\cdots\wedge\d{x}^{\mu_{r}} \\
+        &\qquad + \frac{1}{r!}[X^{\nu}\partial_{\nu}\omega_{\mu_{1}\cdots\mu_{r}}\,\d{x}^{\mu_{1}}\wedge\cdots\wedge\d{x}^{\mu_{r}} + \cancel{\sum_{s=1}^{r} X^{\mu_{s}}\partial_{\nu}\omega_{\mu_{1}\cdots\mu_{s}\cdots\mu_{r}}(-1)^{s}\,\d{x}^{\nu}\wedge\cdots\wedge\widehat{\d{x}^{\mu_{s}}}\wedge\cdots\wedge\d{x}^{\mu_{r}}}] \\
+        &= \mca{L}_{X}\omega
+    \end{align*}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Let $X, Y \in \mathscr{X}(\mca{M})$ and $\omega \in \Omega^{r}(\mca{M})$. Show that
+    \begin{itemize}
+        \item[(1)] $i_{[X,Y]}\omega = X(i_{Y}\omega) - Y(i_{X}\omega)$
+        \item[(2)] $i_{X}^{2} = 0$ \footnote{The interior product is \tbf{nilpotent}.}
+        \item[(3)] $\mca{L}_{X}i_{X}\omega = i_{X}\mca{L}_{X}\omega$.
+    \end{itemize}
+\end{exer}
+
+\begin{proof}
+    \hphantom{.}
+    \begin{itemize}
+        \item[(1)] Since $[X,Y]^{\nu} = (\mca{L}_{X}Y)^{\nu} = X^{\mu}\partial_{\mu}Y^{\nu} - Y^{\mu}\partial_{\mu}X^{\nu}$,
+        \begin{align*}
+            i_{[X,Y]}\omega &= \frac{1}{(r-1)!} (X^{\mu}\partial_{\mu}Y^{\nu} - Y^{\mu}\partial_{\mu}X^{\nu}) \omega_{\nu\mu_{2}\cdots\mu_{r}} \, \d{x}^{\mu_{2}} \wedge \cdots \wedge \d{x}^{\mu_{r}} \\
+            &= X^{\mu}\partial_{\mu}(i_{Y}\omega) - Y^{\mu}\partial_{\mu}(i_{X}\omega) = X(i_{Y}\omega) - Y(i_{X}\omega)
+        \end{align*}
+        \item[(2)] For $X_{3},\cdots,X_{r} \in \mathscr{X}(\mca{M})$,
+        \[ i_{X}i_{X}\omega(X_{3},\cdots,X_{r}) = i_{X}\omega(X,X_{3},\cdots,X_{r}) = \omega(X,X,X_{3},\cdots,X_{r}) = 0 \]
+        because $\omega$ is \tit{totally antisymmetric}.
+        \item[(3)] By Cartan's magic formula,
+        \begin{align*}
+            \mca{L}_{X}i_{X}\omega &= (\cancel{\d i_{X}} + i_{X}\d)(i_{X}\omega) = i_{X}\d i_{X}\omega \\
+            i_{X}\mca{L}_{X}\omega &= i_{X}(\d i_{X}+\cancel{i_{X}\d})\omega = i_{X}\d i_{X}\omega
+        \end{align*}
+    \end{itemize}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}[Leibniz rule of interior product]
+    For $X \in \mathscr{X}(\mca{M})$, $\omega \in \Omega^{r}(\mca{M})$ and $\eta \in \Omega^{s}(\mca{M})$,
+    \[ i_{X}(\omega \wedge \eta) = i_{X}\omega \wedge \eta + (-1)^{r}\omega \wedge i_{X}\eta \]
+    ($i_{X}$ is an \tit{anti-derivation}.)
+\end{exer}
+
+\begin{proof}
+    \tbf{Elementary proof.} Call $X = V_{1}$ and let $V_{2},\cdots,V_{r+s} \in \mathscr{X}(\mca{M})$.
+    \begin{align*}
+        i_{V_{1}}&(\omega\wedge\eta)(V_{2},\cdots,V_{r+s}) = (\omega\wedge\eta)(V_{1},V_{2},\cdots,V_{r+s}) \\
+        &= \frac{1}{r!s!}\sum_{P \in S_{r+s}} \mrm{sgn}(P) \omega(V_{P(1)},\cdots,V_{P(r)}) \eta(V_{P(r+1)}\cdots V_{P(r+s)}) \\
+        &= \frac{1}{r!s!} [ \sum_{P_{1}\in S_{r+s}} \mrm{sgn}(P_{1}) \omega(V_{P_{1}(1)},\cdots,V_{P_{1}(r)}) \eta(V_{P_{1}(r+1)}\cdots V_{P_{1}(r+s)}) \\
+        &\qquad\qquad\qquad\qquad\qquad\qquad + \sum_{P_{2}\in S_{r+s}} \mrm{sgn}(P_{2}) \omega(V_{P_{2}(1)},\cdots,V_{P_{2}(r)}) \eta(V_{P_{2}(r+1)}\cdots V_{P_{2}(r+s)}) ]
+    \end{align*}
+    Here, we split permutations in $S_{r+s}$ into two sets: $P_{1}$ such that $1 \in \{P_{1}(1),\cdots,P_{1}(r)\}$ and $P_{2}$ such that $1 \in \{P_{2}(r+1),\cdots,P_{2}(r+s)\}$. In the next step, we view $P_{1}$ (and $P_{2}$) as a permutation in $S_{r+s-1}$, by fixing $1 = P_{1}(1)$ (and $1 = P_{2}(r+1)$) by exploiting the alternating nature of $\omega$ and $\eta$. Then
+    \begin{align*}
+        i_{V_{1}}&(\omega\wedge\eta)(V_{2},\cdots,V_{r+s}) = \frac{1}{(r-1)!s!}\sum_{P_{1}'\in S_{r+s-1}} \mrm{sgn}(P_{1}')\omega(V_{1},V_{P_{1}'(2)},\cdots,V_{P_{1}'(r)}) \eta(V_{P_{1}'(r+1)},\cdots,V_{P_{1}'(r+s)}) \\
+        &\qquad\qquad\qquad\qquad + \frac{1}{r!(s-1)!}\sum_{P_{2}'\in S_{r+s-1}}\mrm{sgn}(P_{2}')(-1)^{r}\omega(V_{P_{2}'(1)},\cdots,V_{P_{2}'(r)})\eta(V_{1},\cdots,V_{P_{2}'(r+s)}) \\
+        &= i_{X}\omega \wedge \eta + (-1)^{r}\omega \wedge i_{X}\eta
+    \end{align*}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{proof}
+    \tbf{Fancy proof.} It is sufficient to prove where $\omega$ and $\eta$ are \tit{decomposable}. Suppose $\alpha^{1},\cdots,\alpha^{r+s} \in \Omega^{1}(\mca{M})$ and
+    \[ \omega = \alpha^{1} \wedge \cdots \wedge \alpha^{r} \quad\text{and}\quad \eta = \alpha^{r+1} \wedge \cdots \wedge \alpha^{r+s} \]
+    Then $i_{X}(\omega\wedge\eta) = i_{X}(\alpha^{1}\wedge\cdots\wedge\alpha^{r+s})$. Let $X_{2},\cdots,X_{r+s} \in T_{p}\mca{M}$.
+    \begin{align*}
+        i_{X}(\alpha^{1}&\wedge\cdots\wedge\alpha^{r+s})(X_{2},\cdots,X_{r+s}) = (\alpha^{1}\wedge\cdots\wedge\alpha^{r+s})(X,X_{2},\cdots,X_{r+s}) \\
+        &= (r+s)!\mca{A}(\alpha^{1}\otimes\cdots\otimes\alpha^{r+s})(X_{1},\cdots,X_{r+s}) \quad(X \equiv X_{1}) \\
+        &= (r+s)!\sum_{P \in S_{r+s}} \mrm{sgn}(P)\prod_{k=1}^{r+s}\alpha^{k}(X_{P(k)}) \\
+        &= (r+s)!\det[\alpha^{i}(X_{j})] \\
+        &= (r+s)!\det\begin{bmatrix}\alpha^{1}(X_{1}) & \cdots & \alpha^{1}(X_{r+s}) \\ \alpha^{2}(X_{1}) & \cdots & \alpha^{2}(X_{r+s}) \\ \vdots & \ddots & \vdots \\
+        \alpha^{r+s}(X_{1}) & \cdots & \alpha^{r+s}(X_{r+s})\end{bmatrix} \quad(\text{expand along the first column})\\
+        &= (r+s)!\sum_{i=1}^{r+s}(-1)^{i+1}\alpha^{i}(X)\det[\alpha^{l}(v_{j})]_{1 \leq l \leq r + s,\, l \neq i,\, 2 \leq j \leq k} \\
+        &= \sum_{i=1}^{r+s}(-1)^{i+1}\alpha^{i}(X) \, \alpha^{1} \wedge \cdots \wedge \widehat{\alpha^{i}} \wedge \cdots \wedge \alpha^{r+s} (X_{2}, \cdots, X_{r+s})
+    \end{align*}
+    Hence,
+    \begin{align*}
+        i_{X}(\alpha^{1}\wedge\cdots\wedge\alpha^{r+s}) &= \left(\sum_{i=1}^{r}(-1)^{i+1}\alpha^{i}(X)\,\alpha^{1}\wedge\cdots\widehat{\alpha^{i}}\wedge\cdots\wedge\alpha^{r}\right)\wedge\alpha^{r+1}\wedge\cdots\wedge\cdots\alpha^{r+s} \\
+        &\qquad\qquad+(-1)^{r}\alpha^{1}\wedge\cdots\wedge\alpha^{r}\wedge\left(\sum_{i=1}^{s}\alpha^{r+i}(X)\alpha^{r+1}\wedge\cdots\wedge\widehat{\alpha^{r+i}}\wedge\cdots\wedge\alpha^{r+s}\right) \\
+        &= i_{X}\omega \wedge \eta + (-1)^{r}\omega \wedge i_{X}\eta
+    \end{align*}
+\end{proof}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{exer}
+    Let $T = \mathfrak{T}^{(n,m)}(\mca{M})$. Show that
+    \[ (\mca{L}_{X}T)^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}} = X^{\lambda}\partial_{\lambda}T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}} + \sum_{s=1}^{m}\partial_{\nu_{s}}X^{\lambda}T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots{\tikzmark{starts}\lambda\tikzmark{ends}}\cdots\nu_{m}} - \sum_{s=1}^{n}\partial_{\lambda}X^{\mu_{s}}T^{\mu_{1}\cdots{\tikzmark{startl}\lambda\tikzmark{endl}}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}} \]
+
+    \begin{tikzpicture}[remember picture, overlay]
+        \node [shift = {(0em, -2.5ex)}, anchor = north] at ($({pic cs:starts})!0.5!({pic cs:ends})$) (X) {$\nu_{s}$};
+        \draw [thick, -latex] (X.north) -| ($({pic cs:starts})!0.5!({pic cs:ends})+(0,-0.5ex)$);
+        \node [shift = {(0em, -2.5ex)}, anchor = north] at ($({pic cs:startl})!0.5!({pic cs:endl})$) (Y) {$\mu_{s}$};
+        \draw [thick, -latex] (Y.north) -| ($({pic cs:startl})!0.5!({pic cs:endl})+(0,-0.5ex)$);
+    \end{tikzpicture}
+\end{exer}
+
+\begin{proof}
+    Contract $T$ with arbitrary vectors $Y^{1},\cdots,Y^{m}$ and covectors $Z^{1},\cdots,Z^{n}$ to yield
+    \[ (\ast) = T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}}(Y^{1})^{\nu_{1}}\cdots(Y^{m})^{\nu_{m}}(Z^{1})_{\mu_{1}}\cdots(Z^{n})_{\mu_{n}} \]
+    and apply the Lie derivative.
+    \begin{align*}
+        \mca{L}_{X}(\ast) &= \underbrace{\boxed{\mca{L}_{X}(T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}})}}_{X^{\lambda}\partial_{\lambda}T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}})}(Y^{1})^{\nu_{1}}\cdots(Y^{m})^{\nu_{m}}(Z^{1})_{\mu_{1}}\cdots(Z^{n})_{\mu_{n}} \\
+        &\qquad+T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}})\left[\sum_{s=1}^{m}\cdots\underbrace{(\mca{L}_{X}(Y^{s}))^{\nu_{s}}}_{\textcolor{blue}{X^{\lambda}\partial_{\lambda}(Y^{s})^{\nu_{s}}}-(Y^{s})^{\lambda}\partial_{\lambda}X^{\nu_{s}}}\cdots\right](Z^{1})_{\mu_{1}}\cdots(Z^{n})_{\mu_{n}} \\
+        &\qquad\qquad+ T^{\mu_{1}\cdots\mu_{n}}{}_{\nu_{1}\cdots\nu_{m}})(Y^{1})^{\nu_{1}}\cdots(Y^{m})^{\nu_{m}}\left[\sum_{s=1}^{n}\cdots\underbrace{(\mca{L}_{X}(Z^{s}))_{\mu_{s}}}_{\textcolor{blue}{X^{\lambda}\partial_{\lambda}(Z^{s})_{\mu_{s}}} + \partial_{\nu_{s}}X^{\lambda}(Z^{s})_{\lambda}}\cdots\right]
+    \end{align*}
+    Now choose $(Y^{s})^{\nu_{s}} = \delta^{\nu_{s}}{}_{a}$ and $(Z^{s})_{\mu_{s}} = \delta^{b}{}_{\mu_{s}}$ for fixed $a$ and $b$. Then blue terms disappear and the proof is complete.
+\end{proof}
+
+\subsection{Hamiltonian Mechanics and Symplectic Geometry}
+
+Consider a single particle in $\mbb{R}^{3}$. To describe the motion of that particle, we require $\mbb{R}^{6}$ phase space. In case of $N$ particles, those particles \tit{live} in $3N$-dimensional space while they enjoy $6N$-dimensional phase space. \tit{Even-dimensional spaces have something special!}
+\[ \text{Position} \; (q_{1}, q_{2}, q_{3}) \qquad + \qquad \text{Momentum} \; (p_{1}, p_{2}, p_{3}) \qquad \Longrightarrow \qquad \text{Hamiltonian} \; H(\mbf{q}, \mbf{p}) \]
+\begin{definition}
+    The \tbf{symplectic two-form} $\omega = \d{p}_{\mu} \wedge \d{q}^{\mu}$\footnote{Equation in Nakahara is wrong.} is
+    \begin{itemize}
+        \item antisymmetric: $\omega(X,Y) = -\omega(Y,X)$.
+        \item nondegenerate: $i_{X}\omega = 0 \; \Longrightarrow \; X = 0$.
+        \item closed: $\d\omega = 0$.
+    \end{itemize}
+\end{definition}
+\begin{remark}
+    The one-form $\theta = p_{\mu}\,\d{q}^{\mu}$ gives
+    \[ \d\theta = \d{p}_{\mu} \wedge \d{q}^{\mu} + p_{\mu}\,\cancel{\d^{2}q^{\mu}} = \omega \]
+\end{remark}
+\newpage
+
+% ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
+
+\begin{definition}[Hamiltonian vector fields]
+    Given a function $f(\mbf{q}, \mbf{p})$ in the phase space, define
+    \[ X_{f} = \frac{\partial{f}}{\partial{p}_{\mu}}\frac{\partial}{\partial{q}^{\mu}} - \frac{\partial{f}}{\partial{q}^{\mu}}\frac{\partial}{\partial{p}_{\mu}} \]
+    Then
+    \[ i_{X_{f}}\omega = \frac{\partial{f}}{\partial{p}_{\mu}}(-\d{p}_{\mu}) - \frac{\partial{f}}{\partial{q}^{\mu}}(\d{q}^{\mu}) = -\d{f} \]
+\end{definition}
+\begin{remark}
+    The symplectic two-form $\omega$ is \tbf{left-invariant} along the flow generated by $X_{H}$.
+    \[ \mca{L}_{X_{H}}\omega = \d i_{X_{H}}\omega + i_{X_{H}}\cancel{(\d\omega)} = -\d^{2}H = 0 \]
+\end{remark}
+\begin{remark}
+    A vector field $X$ that satisfies $\mca{L}_{X}\omega = 0$ is called a \tbf{Hamiltonian vector field}. The space of such vector fields on $\mbb{R}^{2n}$ is denoted as $\mrm{Vect}(\mbb{R}^{2n},\omega)$ (By Poincar\'e's Lemma\footnote{I did not mentioned this before.}, $\exists \; H(\mbf{q},\mbf{p})$ such that $i_{X}\omega = -\d{H}$).
+\end{remark}
+
+
+\end{document}
